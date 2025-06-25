@@ -1,3 +1,4 @@
+using API.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
@@ -19,6 +20,8 @@ builder.Services.AddSingleton<IMongoDatabase>(sp =>
     var client = sp.GetRequiredService<IMongoClient>();
     return client.GetDatabase("GroceriesGraphQLDatabase");
 });
+
+builder.Services.AddScoped<IJwtService, JwtService>();
 
 // JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
