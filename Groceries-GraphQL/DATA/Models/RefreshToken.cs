@@ -1,8 +1,10 @@
-﻿using MongoDB.Bson;
+﻿using DATA.Shared;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace DATA.Models
 {
+    [BsonCollection("refreshTokens")]
     public class RefreshToken
     {
         [BsonId]
