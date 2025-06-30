@@ -1,9 +1,9 @@
 using API.Authentication;
 using API.Extensions;
-using DATA.Repository;
+using API.Schema.Mutations;
+using API.Schema.Queries;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using MongoDB.Driver;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -38,9 +38,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // GraphQL
 builder.Services
     .AddGraphQLServer()
-    .AddQueryType()
-    .AddMutationType()
-    .AddAuthorization();
+    .AddAuthorization()
+    .AddQueryType<Query>()
+    .AddMutationType<Mutation>()
+    .AddTypes();
 
 builder.Services.AddAuthorization();
 
@@ -74,5 +75,6 @@ app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapGraphQL("/graphql");
 
 app.Run();
