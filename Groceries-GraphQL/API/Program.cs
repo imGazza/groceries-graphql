@@ -1,4 +1,5 @@
 using API.Authentication;
+using API.Extensions;
 using DATA.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -9,24 +10,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSingleton<ILoggerProvider, Microsoft.Extensions.Logging.Console.ConsoleLoggerProvider>();
 
-builder.Services.AddSingleton<IMongoClient>(sp =>
-{
-    var connectionString = builder.Configuration.GetConnectionString("MongoDB");
-    return new MongoClient(connectionString);
-});
+// Database
+builder.AddMongoDBClient();
+builder.AddMongoDBDatabase();
 
-builder.Services.AddSingleton<IMongoDatabase>(sp =>
-{
-    var client = sp.GetRequiredService<IMongoClient>();
-    return client.GetDatabase("GroceriesGraphQLDatabase");
-});
-
-builder.Services.AddScoped<IJwtService, JwtService>();
-
-// Repository DI
-builder.Services.AddScoped(typeof(IMongoRepository<>), typeof(MongoRepository<>));
+// Repositories and services
+builder.AddBaseRepositories();
+builder.AddServices();
 
 // JWT Authentication
+builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -50,7 +43,6 @@ builder.Services
     .AddAuthorization();
 
 builder.Services.AddAuthorization();
-
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

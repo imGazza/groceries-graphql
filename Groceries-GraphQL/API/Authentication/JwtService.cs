@@ -1,4 +1,4 @@
-﻿using DATA.Models;
+﻿using DATA.Authentication;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;

@@ -1,11 +1,12 @@
-﻿using DATA.Shared;
+﻿using DATA.Models.Shared;
+using DATA.Shared;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace DATA.Models
+namespace DATA.Authentication
 {
     [BsonCollection("users")]
-    public class User
+    public class User : IEntity
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
