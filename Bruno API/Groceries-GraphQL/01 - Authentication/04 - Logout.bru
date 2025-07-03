@@ -1,0 +1,21 @@
+meta {
+  name: 04 - Logout
+  type: graphql
+  seq: 4
+}
+
+post {
+  url: https://localhost:7298/graphql
+  body: graphql
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{access-token}}
+}
+
+body:graphql {
+  mutation Logout(){
+    logout()
+  }
+}

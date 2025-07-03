@@ -1,10 +1,10 @@
 ﻿using API.Authentication;
-using API.Authentication.DTOs;
+using API.Schema.Mutations.Authentication.Models;
 using DATA.Authentication;
 using HotChocolate.Authorization;
 using System.Security.Claims;
 
-namespace API.Schema.Mutations
+namespace API.Schema.Mutations.Authentication
 {
     [ExtendObjectType(typeof(Mutation))]
     public class AuthenticationMutations
@@ -30,14 +30,14 @@ namespace API.Schema.Mutations
 
         public async Task<LoginOutput> LoginUser
             (
-                LoginInput loginData,
+                LoginInput loginInput,
                 [Service] IUserService _userService,
                 [Service] IJwtService _jwtService,
                 HttpContext httpContext
             )
         {
-            var user = await _userService.GetUserByEmail(loginData.Email);
-            ValidateUser(loginData, user, _userService);
+            var user = await _userService.GetUserByEmail(loginInput.Email);
+            ValidateUser(loginInput, user, _userService);
 
             var accessToken = _jwtService.GenerateAccessToken(user);
             var refreshToken = _jwtService.GenerateRefreshToken();
@@ -62,7 +62,7 @@ namespace API.Schema.Mutations
         {
             var refreshToken = httpContext.Request.Cookies["refreshToken"];
 
-            if (!await _userService.IsRefreshTokenValid(refreshToken, user.Id))
+            if (!await _userService.IsRefreshTokenValid(user.Id, refreshToken))
                 throw new GraphQLException("Refresh token is invalid");
 
             string newAccessToken = _jwtService.GenerateAccessToken(user);
@@ -79,10 +79,9 @@ namespace API.Schema.Mutations
             (
                 [Service] IUserService _userService,
                 HttpContext httpContext,
-                ClaimsPrincipal claimsPrincipal
+                ClaimsPrincipal claimsPrincipal // Injected by GraphQL framework
             )
-        {
-            // ClaimsPrincipal is injected by GraphQL framework
+        {            
             var userId = claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
             var refreshToken = httpContext.Request.Cookies["refreshToken"];
 

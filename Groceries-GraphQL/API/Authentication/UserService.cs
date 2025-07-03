@@ -1,4 +1,4 @@
-﻿using API.Authentication.DTOs;
+﻿using API.Schema.Mutations.Authentication.Models;
 using API.Services.Shared;
 using DATA.Authentication;
 using DATA.Repository;
@@ -38,6 +38,7 @@ namespace API.Authentication
             {
                 Email = registerData.Email,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerData.Password),
+                Roles = new List<string> { "User" },
                 FirstName = registerData.FirstName,
                 LastName = registerData.LastName,
             };

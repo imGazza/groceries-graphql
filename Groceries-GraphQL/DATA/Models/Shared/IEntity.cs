@@ -8,6 +8,8 @@ namespace DATA.Models.Shared
 {
     public interface IEntity
     {
-        public string Id { get; set; }
+        string Id { get; set; }
+        DateTime CreatedAt { get; set; }
+        DateTime UpdatedAt { get; set; }
     }
 }

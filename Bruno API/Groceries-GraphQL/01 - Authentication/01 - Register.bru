@@ -11,7 +11,18 @@ post {
 }
 
 body:graphql {
-  mutation {
-    
+  mutation RegisterUser($registerInput: RegisterInput!) {
+    registerUser(registerInput: $registerInput)
+  }
+}
+
+body:graphql:vars {
+  {
+    "registerInput": {
+      "firstName": "Luca",
+      "lastName": "Gazzardi",
+      "email": "gazzardi.luca@gmail.com",
+      "password": "patate"
+    }
   }
 }

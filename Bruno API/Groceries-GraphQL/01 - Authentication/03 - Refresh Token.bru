@@ -1,0 +1,47 @@
+meta {
+  name: 03 - Refresh Token
+  type: graphql
+  seq: 3
+}
+
+post {
+  url: https://localhost:7298/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation RefreshToken($user: UserInput!){
+    refreshToken(user: $user){
+      accessToken,
+      user{
+        email,
+        firstName,
+        lastName      
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "user": 
+    {
+      "id": "6866a2e930646f013bf9bbb9",
+      "createdAt": "2025-07-03T15:34:01.576Z",
+      "updatedAt": "2025-07-03T15:34:01.446Z",
+      "firstName": "Luca",
+      "lastName": "Gazzardi",
+      "passwordHash": "$2a$11$u2Excao/cMXSJD8mXWe/EeXn4YLWtZYbCXHVgSh3E9TZsBTsVbRHu",
+      "email": "gazzardi.luca@gmail.com",
+      "roles": [
+        "User"
+      ]
+    }
+  }
+}
+
+script:post-response {
+  var jsonData = res.getBody();
+  bru.setEnvVar("access-token", jsonData.data.refreshToken.accessToken);
+}

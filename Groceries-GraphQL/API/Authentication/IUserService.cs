@@ -1,4 +1,4 @@
-﻿using API.Authentication.DTOs;
+﻿using API.Schema.Mutations.Authentication.Models;
 using DATA.Authentication;
 
 namespace API.Authentication

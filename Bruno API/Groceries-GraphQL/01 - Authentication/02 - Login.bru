@@ -1,0 +1,38 @@
+meta {
+  name: 02 - Login
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: https://localhost:7298/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation LoginUser($loginInput: LoginInput!){
+    loginUser(loginInput: $loginInput){
+      accessToken,
+      user {
+        email,
+        firstName,
+        lastName
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "loginInput": {
+      "email": "gazzardi.luca@gmail.com",
+      "password": "patate"
+    }  
+  }
+}
+
+script:post-response {
+  var jsonData = res.getBody();
+  bru.setEnvVar("access-token", jsonData.data.loginUser.accessToken);
+}

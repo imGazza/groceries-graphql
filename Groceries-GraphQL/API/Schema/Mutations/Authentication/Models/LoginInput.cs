@@ -1,4 +1,4 @@
-﻿namespace API.Authentication.DTOs
+﻿namespace API.Schema.Mutations.Authentication.Models
 {
     public class LoginInput
     {

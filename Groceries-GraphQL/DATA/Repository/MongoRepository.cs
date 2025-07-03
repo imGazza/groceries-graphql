@@ -34,6 +34,7 @@ namespace DATA.Repository
 
         public async Task InsertOne(T entity)
         {
+            entity.CreatedAt = DateTime.UtcNow;
             await _collection.InsertOneAsync(entity);
         }
 
@@ -44,8 +45,8 @@ namespace DATA.Repository
 
         public async Task UpdateOne(T entity)
         {
-            var filter = Builders<T>.Filter.Eq("_id", entity.Id);
-            await _collection.ReplaceOneAsync(filter, entity);
+            entity.UpdatedAt = DateTime.UtcNow;
+            await _collection.ReplaceOneAsync(x => x.Id == entity.Id, entity);
         }
     }
 }
