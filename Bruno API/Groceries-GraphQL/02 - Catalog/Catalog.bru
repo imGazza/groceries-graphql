@@ -1,0 +1,26 @@
+meta {
+  name: Catalog
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: https://localhost:7298/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  {
+    catalog {
+      name
+      measurementUnit
+      measurementQuantity
+      price
+      image {
+        contentType
+      }
+    }
+  }
+  
+}

@@ -13,13 +13,13 @@ namespace API.Schema.Mutations.Authentication
 
         public async Task<bool> RegisterUser
             (
-                RegisterInput registerData, 
+                RegisterInput registerInput, 
                 [Service] IUserService _userService
             )
         {
             try
             {
-                await _userService.CreateUser(registerData);
+                await _userService.CreateUser(registerInput);
                 return true;
             }
             catch (Exception ex)
@@ -109,7 +109,7 @@ namespace API.Schema.Mutations.Authentication
             {
                 UserId = userId,
                 Token = token,
-                ExpiresAt = DateTime.UtcNow.AddDays(RefreshTokenExpirationDays)
+                ExpiresAt = DateTime.Now.AddDays(RefreshTokenExpirationDays)
             };
 
             await _userService.AddRefreshToken(refreshToken);
@@ -122,7 +122,7 @@ namespace API.Schema.Mutations.Authentication
                 HttpOnly = true,
                 Secure = true,
                 SameSite = SameSiteMode.Strict,
-                Expires = DateTime.UtcNow.AddDays(RefreshTokenExpirationDays)
+                Expires = DateTime.Now.AddDays(RefreshTokenExpirationDays)
             });
         }
     }

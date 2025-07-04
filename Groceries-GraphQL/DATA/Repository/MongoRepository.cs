@@ -7,6 +7,7 @@ namespace DATA.Repository
 {
     public interface IMongoRepository<T> where T : IEntity
     {
+        IQueryable<T> AsQueryable();
         Task InsertOne(T entity);
         Task<T> FindOne(Expression<Func<T, bool>> filter);
         Task UpdateOne(T entity);
@@ -15,6 +16,11 @@ namespace DATA.Repository
     public class MongoRepository<T> : IMongoRepository<T> where T : IEntity
     {
         private readonly IMongoCollection<T> _collection;
+
+        public IQueryable<T> AsQueryable()
+        {
+            return _collection.AsQueryable();
+        }
 
         public MongoRepository(IMongoDatabase database)
         {
@@ -34,7 +40,7 @@ namespace DATA.Repository
 
         public async Task InsertOne(T entity)
         {
-            entity.CreatedAt = DateTime.UtcNow;
+            entity.CreatedAt = DateTime.Now;
             await _collection.InsertOneAsync(entity);
         }
 
@@ -45,7 +51,7 @@ namespace DATA.Repository
 
         public async Task UpdateOne(T entity)
         {
-            entity.UpdatedAt = DateTime.UtcNow;
+            entity.UpdatedAt = DateTime.Now;
             await _collection.ReplaceOneAsync(x => x.Id == entity.Id, entity);
         }
     }

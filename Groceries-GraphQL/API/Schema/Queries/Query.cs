@@ -1,11 +1,13 @@
 ﻿using API.Authentication;
 using API.Schema.Mutations.Authentication.Models;
+using HotChocolate.Authorization;
 using System.Security.Claims;
 
 namespace API.Schema.Queries
 {
     public class Query
     {
+        [Authorize]
         public async Task<UserInfo> Me([Service] IUserService _userService, ClaimsPrincipal claimsPrincipal)
         {
             var userId = claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);

@@ -76,7 +76,7 @@ namespace API.Authentication
 
         private async Task<RefreshToken> GetValidRefreshToken(string userId, string token)
         {
-            return await _refreshTokenRepository.FindOne(rt => rt.UserId == userId && rt.Token == token && !rt.IsRevoked && rt.ExpiresAt > DateTime.UtcNow);
+            return await _refreshTokenRepository.FindOne(rt => rt.UserId == userId && rt.Token == token && !rt.IsRevoked && rt.ExpiresAt > DateTime.Now);
         }
     }
 }

@@ -41,7 +41,8 @@ builder.Services
     .AddAuthorization()
     .AddQueryType<Query>()
     .AddMutationType<Mutation>()
-    .AddTypes();
+    .AddTypes()
+    .AddType<UploadType>();
 
 builder.Services.AddAuthorization();
 

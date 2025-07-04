@@ -1,0 +1,30 @@
+meta {
+  name: Create Product
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: https://localhost:7298/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation CreateProduct($productInput: ProductInput!, $productImage: Upload) {
+    createProduct(productInput: $productInput, productImage: $productImage)
+  }
+  
+}
+
+body:graphql:vars {
+  {
+    "productInput": {
+      "name": "Banane",
+      "measurementQuantity": 180,
+      "measurementUnit": "gr",
+      "price": 0.50
+    },
+    "productImage": "banane-chiquita.jpg"
+  }
+}
