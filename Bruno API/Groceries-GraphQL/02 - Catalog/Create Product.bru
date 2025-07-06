@@ -1,30 +1,21 @@
 meta {
   name: Create Product
-  type: graphql
-  seq: 1
+  type: http
+  seq: 3
 }
 
 post {
   url: https://localhost:7298/graphql
-  body: graphql
+  body: multipartForm
   auth: inherit
 }
 
-body:graphql {
-  mutation CreateProduct($productInput: ProductInput!, $productImage: Upload) {
-    createProduct(productInput: $productInput, productImage: $productImage)
-  }
-  
+headers {
+  GraphQL-Preflight: 
 }
 
-body:graphql:vars {
-  {
-    "productInput": {
-      "name": "Banane",
-      "measurementQuantity": 180,
-      "measurementUnit": "gr",
-      "price": 0.50
-    },
-    "productImage": "banane-chiquita.jpg"
-  }
+body:multipart-form {
+  operations: {"query": "mutation CreateProduct($productInput: ProductInput!, $productImage: Upload) { createProduct(productInput: $productInput, productImage: $productImage)}", "variables": {"productInput": {"name": "Banane", "price": 0.50, "measurementQuantity": 180, "measurementUnit": "gr"}, "productImage": null}}
+  map: {"0": ["variables.productImage"]}
+  0: @file(C:\Users\gazza\Desktop\Banana-Chiquita-1kg-Approx-weight-380260-01.jpg)
 }
