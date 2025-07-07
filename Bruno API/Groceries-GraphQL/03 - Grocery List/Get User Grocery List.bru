@@ -1,0 +1,27 @@
+meta {
+  name: Get User Grocery List
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: https://localhost:7298/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  {
+    userGroceryLists(userId: "6867d4b3d9365ec079a5ca4a") {
+      totalPrice,
+      completedAt,
+      items {
+        productItemId,
+        productItemName,
+        quantity,
+        unitPrice,
+        addedAt
+      }
+    }
+  }
+}

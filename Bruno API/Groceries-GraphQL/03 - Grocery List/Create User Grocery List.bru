@@ -1,0 +1,36 @@
+meta {
+  name: Create User Grocery List
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: https://localhost:7298/graphql
+  body: graphql
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{access-token}}
+}
+
+body:graphql {
+  mutation CreateUserGroceryList($groceryListInput: GroceryListInput!) {
+    createUserGroceryList(groceryListInput: $groceryListInput)
+  }
+}
+
+body:graphql:vars {
+  {
+    "groceryListInput": {
+      "items": [
+        {
+          "productItemId": "686c08188f5b3356aa015751",
+          "productItemName": "Banane",
+          "quantity": 2,
+          "unitPrice": 0.5
+        }
+      ]
+    }
+  }
+}

@@ -14,7 +14,7 @@ namespace API.Schema.Queries.Catalog
             _catalogService = catalogService;
         }
 
-        public async Task<List<ProductItem>> Catalog()
+        public async Task<List<ProductItem>> Catalog([Service] ICatalogService _catalogService)
         {
             return await _catalogService.GetCatalog();
         }
