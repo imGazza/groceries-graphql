@@ -49,8 +49,9 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
 
-  /* Custom Colors */
+  /* Custom */
   --custom: oklch(0.5925 0.1782 146.53);
+  --pacifico-font: 'Pacifico', system-ui, Avenir, Helvetica, Arial, sans-serif
 }
 
 .dark {
@@ -86,7 +87,7 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 
-  /* Custom Colors */
+  /* Custom */
   --custom: oklch(0.5925 0.1782 146.53);
 }
 
@@ -127,7 +128,7 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  /* Custom Colors */
+  /* Custom */
   --color-custom: var(--custom);
 }
 
@@ -138,4 +139,14 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.pacifico-font{
+  font-family: var(--pacifico-font);  
+}
+
+.groceries-logo{
+  font-size: x-large;
+  margin-top: -4px;
+  cursor: default;
 }
