@@ -14,5 +14,14 @@ namespace API.Schema.Mutations.Catalog
             await _catalogService.CreateProduct(productInput, productImage);
             return true;
         }
+
+        public async Task<bool> CreateCategory(CategoryInput categoryInput, [Service] ICatalogService _catalogService)
+        {
+            if (categoryInput == null)
+                return false;
+
+            await _catalogService.CreateCategory(categoryInput);
+            return true;
+        }
     }
 }

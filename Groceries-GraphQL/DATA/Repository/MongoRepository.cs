@@ -9,7 +9,9 @@ namespace DATA.Repository
     public interface IMongoRepository<T> where T : IEntity
     {
         IQueryable<T> AsQueryable();
+        Task<List<TProjection>> GetAllProjected<TProjection>(Expression<Func<T, TProjection>> projection);
         Task<List<T>> Filter(Expression<Func<T, bool>> filter);
+        Task<List<TProjection>> FilterProjected<TProjection>(Expression<Func<T, bool>> filter, Expression<Func<T, TProjection>> projection);
         Task<T> FindOne(Expression<Func<T, bool>> filter);
         Task<T> InsertOne(T entity);
         Task<T> UpdateOne(T entity);
@@ -40,12 +42,20 @@ namespace DATA.Repository
             return _collection.AsQueryable();
         }
 
-        public async Task<List<T>> Filter(Expression<Func<T, bool>> filter)
+        public async Task<List<TProjection>> GetAllProjected<TProjection>(Expression<Func<T, TProjection>> projection)
         {
-            return (await _collection.FindAsync(filter)).ToList();
+            return await _collection.Find(FilterDefinition<T>.Empty).Project(projection).ToListAsync();
         }
 
-        //TODO: Consider adding a Filter method with projection if needed
+        public async Task<List<T>> Filter(Expression<Func<T, bool>> filter)
+        {
+            return await _collection.Find(filter).ToListAsync();
+        }
+
+        public async Task<List<TProjection>> FilterProjected<TProjection>(Expression<Func<T, bool>> filter, Expression<Func<T, TProjection>> projection)
+        {
+            return await _collection.Find(filter).Project(projection).ToListAsync();
+        }
 
         public async Task<T> FindOne(Expression<Func<T, bool>> filter)
         {

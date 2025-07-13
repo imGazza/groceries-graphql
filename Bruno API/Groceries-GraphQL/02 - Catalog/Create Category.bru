@@ -1,0 +1,26 @@
+meta {
+  name: Create Category
+  type: graphql
+  seq: 4
+}
+
+post {
+  url: https://localhost:7298/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation CreateCategory($categoryInput: CategoryInput!) {
+    createCategory(categoryInput: $categoryInput)
+  }
+}
+
+body:graphql:vars {
+  {
+    "categoryInput": {
+      "name": "Vegetables",
+      "iconName": "Salad"
+    }
+  }
+}
