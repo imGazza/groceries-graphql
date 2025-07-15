@@ -1,14 +1,18 @@
 import './App.css'
-import TopBar from './topbar/top-bar'
+import TopBar from './features/layout/top-bar'
 import ActiveSectionProvider from './provider/active-section/active-section-provider'
-import HomeLayout from './pages/home/home-layout'
+import HomeLayout from './features/layout/home-layout'
+import { ApolloProvider } from '@apollo/client'
+import apolloClient from './http/apollo-client'
 
 function App() {
   return (
-    <ActiveSectionProvider>      
-      <TopBar />
-      <HomeLayout />
-    </ActiveSectionProvider>
+    <ApolloProvider client={apolloClient}>
+      <ActiveSectionProvider>
+        <TopBar />
+        <HomeLayout />
+      </ActiveSectionProvider>
+    </ApolloProvider>
   )
 }
 
