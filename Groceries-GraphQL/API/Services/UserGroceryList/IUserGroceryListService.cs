@@ -5,7 +5,7 @@ namespace API.Services.UserGroceryList
 {
     public interface IUserGroceryListService
     {
-        Task<List<GroceryList>> GetUserGroceryLists(string userId);
-        Task CreateUserGroceryList(GroceryListInput groceryListInput, string userId);
+        Task<List<GroceryListOutput>> GetUserGroceryLists(string userId);
+        Task<GroceryList> CreateUserGroceryList(GroceryListInput groceryListInput, string userId);
     }
 }

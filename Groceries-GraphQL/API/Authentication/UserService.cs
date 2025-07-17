@@ -70,7 +70,7 @@ namespace API.Authentication
             if(refreshToken != null)
             {
                 refreshToken.IsRevoked = true;
-                await _refreshTokenRepository.UpdateOne(refreshToken);
+                await _refreshTokenRepository.ReplaceOne(refreshToken);
             }
         }
 

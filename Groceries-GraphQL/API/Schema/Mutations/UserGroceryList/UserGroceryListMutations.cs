@@ -10,11 +10,12 @@ namespace API.Schema.Mutations.UserGroceryList
     public class UserGroceryListMutations
     {
         [Authorize]
-        public async Task<bool> CreateUserGroceryList(GroceryListInput groceryListInput, [Service] IUserGroceryListService _userGroceryListService, ClaimsPrincipal claimsPrincipal)
+        public async Task<GroceryList> CreateUserGroceryList(GroceryListInput groceryListInput, [Service] IUserGroceryListService _userGroceryListService, ClaimsPrincipal claimsPrincipal)
         {
             var userId = claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
-            await _userGroceryListService.CreateUserGroceryList(groceryListInput, userId);
-            return true;
+            return await _userGroceryListService.CreateUserGroceryList(groceryListInput, userId);
         }
+
+        public async Task<GroceryList> 
     }
 }

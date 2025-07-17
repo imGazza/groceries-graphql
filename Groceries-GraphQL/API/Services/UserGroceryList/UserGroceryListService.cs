@@ -1,41 +1,53 @@
-﻿using API.Schema.Mutations.UserGroceryList.Model;
+﻿using API.Projections;
+using API.Schema.Mutations.UserGroceryList.Model;
 using API.Services.Shared;
 using DATA.Models;
 using DATA.Repository;
+using MongoDB.Driver;
 
 namespace API.Services.UserGroceryList
 {
     public class UserGroceryListService : IUserGroceryListService, IInjectableService
     {
-        private readonly IMongoRepository<GroceryList> _userGroceryListRepository;
+        private readonly IMongoRepository<GroceryList> _groceryListRepository;
 
-        public UserGroceryListService(IMongoRepository<GroceryList> userGroceryListRepository)
+        public UserGroceryListService(IMongoRepository<GroceryList> groceryListRepository)
         {
-            _userGroceryListRepository = userGroceryListRepository;
+            _groceryListRepository = groceryListRepository;
         }
 
-        public async Task<List<GroceryList>> GetUserGroceryLists(string userId)
+        public async Task<List<GroceryListOutput>> GetUserGroceryLists(string userId)
         {
-            return await _userGroceryListRepository.Filter(x => x.UserId == userId);
+            return await _groceryListRepository.FilterAndProject(x => x.UserId == userId, GroceryListOutputProjection.Project());
         }
 
-        public async Task CreateUserGroceryList(GroceryListInput groceryListInput, string userId)
+        public async Task<GroceryList> CreateUserGroceryList(GroceryListInput groceryListInput, string userId)
         {
             ValidateGroceryListInput(groceryListInput);
 
             var groceryList = new GroceryList
             {
                 UserId = userId,
-                TotalPrice = CalculateTotalPrice(),
+                TotalPrice = CalculateTotalPrice(groceryListInput.Items),
                 Items = groceryListInput.Items
             };
 
-            await _userGroceryListRepository.InsertOne(groceryList);
+            return await _groceryListRepository.InsertOne(groceryList);            
+        }
 
-            decimal CalculateTotalPrice()
-            {
-                return groceryListInput.Items.Sum(item => item.Quantity * item.UnitPrice);
-            }
+        public async Task<GroceryListOutput> UpdateGroceryListProducts(GroceryUpdateProductsInput groceryUpdateProducts)
+        {
+            // Anti-pattern: keeping the update definition here to avoid creating custom repositories for each entity
+            // Could be resolved calling ReplaceOne intead of UpdateOne, but it would require fetching the whole entity first
+            var updateDefinition = Builders<GroceryList>.Update
+                .Set(gl => gl.Items, groceryUpdateProducts.Items)
+                .Set(gl => gl.TotalPrice, CalculateTotalPrice(groceryUpdateProducts.Items));
+
+            return await _groceryListRepository.UpdateOne(
+                gl => gl.Id == groceryUpdateProducts.GroceryListId,
+                updateDefinition,
+                GroceryListOutputProjection.Project()
+            );
         }
 
         private void ValidateGroceryListInput(GroceryListInput groceryListInput)
@@ -51,6 +63,11 @@ namespace API.Services.UserGroceryList
                 if (item.UnitPrice < 0)
                     throw new ArgumentException($"{item.ProductItemName}: negative unit price");
             }
+        }
+
+        private decimal CalculateTotalPrice(List<GroceryItem> groceryItems)
+        {
+            return groceryItems.Sum(item => item.Quantity * item.UnitPrice);
         }
     }
 }

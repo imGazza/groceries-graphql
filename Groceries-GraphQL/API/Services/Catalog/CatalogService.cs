@@ -42,7 +42,7 @@ namespace API.Services.Catalog
 
         public async Task<List<CategoryOutput>> GetCategories()
         {
-            return await _categoryRepository.GetAllProjected(c => new CategoryOutput
+            return await _categoryRepository.GetAllAndProject(c => new CategoryOutput
             {
                 Id = c.Id,
                 Name = c.Name,

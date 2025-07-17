@@ -9,12 +9,13 @@ namespace DATA.Repository
     public interface IMongoRepository<T> where T : IEntity
     {
         IQueryable<T> AsQueryable();
-        Task<List<TProjection>> GetAllProjected<TProjection>(Expression<Func<T, TProjection>> projection);
+        Task<List<TProjection>> GetAllAndProject<TProjection>(Expression<Func<T, TProjection>> projection);
         Task<List<T>> Filter(Expression<Func<T, bool>> filter);
-        Task<List<TProjection>> FilterProjected<TProjection>(Expression<Func<T, bool>> filter, Expression<Func<T, TProjection>> projection);
+        Task<List<TProjection>> FilterAndProject<TProjection>(Expression<Func<T, bool>> filter, Expression<Func<T, TProjection>> projection);
         Task<T> FindOne(Expression<Func<T, bool>> filter);
         Task<T> InsertOne(T entity);
-        Task<T> UpdateOne(T entity);
+        Task<T> ReplaceOne(T entity);
+        Task<TProjection> UpdateOne<TProjection>(Expression<Func<T, bool>> filter, UpdateDefinition<T> update, Expression<Func<T, TProjection>> projection);
     }
 
     public class MongoRepository<T> : IMongoRepository<T> where T : IEntity
@@ -42,7 +43,7 @@ namespace DATA.Repository
             return _collection.AsQueryable();
         }
 
-        public async Task<List<TProjection>> GetAllProjected<TProjection>(Expression<Func<T, TProjection>> projection)
+        public async Task<List<TProjection>> GetAllAndProject<TProjection>(Expression<Func<T, TProjection>> projection)
         {
             return await _collection.Find(FilterDefinition<T>.Empty).Project(projection).ToListAsync();
         }
@@ -52,7 +53,7 @@ namespace DATA.Repository
             return await _collection.Find(filter).ToListAsync();
         }
 
-        public async Task<List<TProjection>> FilterProjected<TProjection>(Expression<Func<T, bool>> filter, Expression<Func<T, TProjection>> projection)
+        public async Task<List<TProjection>> FilterAndProject<TProjection>(Expression<Func<T, bool>> filter, Expression<Func<T, TProjection>> projection)
         {
             return await _collection.Find(filter).Project(projection).ToListAsync();
         }
@@ -69,10 +70,17 @@ namespace DATA.Repository
             return entity;
         }
 
-        public async Task<T> UpdateOne(T entity)
+        public async Task<T> ReplaceOne(T entity)
         {
             entity.UpdatedAt = DateTime.Now;
             return await _collection.FindOneAndReplaceAsync(x => x.Id == entity.Id, entity, new FindOneAndReplaceOptions<T> { ReturnDocument = ReturnDocument.After });
+        }
+
+        public async Task<TProjection> UpdateOne<TProjection>(Expression<Func<T, bool>> filter, UpdateDefinition<T> update, Expression<Func<T, TProjection>> projection)
+        {
+            var projectionBuilder = Builders<T>.Projection.Expression(projection);
+            update.Set(x => x.UpdatedAt, DateTime.Now);
+            return await _collection.FindOneAndUpdateAsync(filter, update, new FindOneAndUpdateOptions<T, TProjection> { ReturnDocument = ReturnDocument.After, Projection = projectionBuilder });
         }
     }
 }
