@@ -1,34 +1,32 @@
-﻿using API.Schema.Mutations.Catalog.Models;
+﻿using API.Projections;
+using API.Records;
 using API.Services.Shared;
 using DATA.Models;
-using DATA.Repository;
+using DATA.Models._Shared;
+using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
 namespace API.Services.Catalog
 {
     public class CatalogService : ICatalogService, IInjectableService
     {
-        private readonly IMongoRepository<ProductItem> _catalogRepository;
-        private readonly IMongoRepository<Category> _categoryRepository;
+        private readonly IMongoCollection<ProductItem> _catalogCollection;
+        private readonly IMongoCollection<Category> _categoryCollection;
 
-        public CatalogService
-            (
-                IMongoRepository<ProductItem> catalogRepository,
-                IMongoRepository<Category> categoryRepository
-            )
+        public CatalogService(IMongoDatabase database)
         {
-            _catalogRepository = catalogRepository;
-            _categoryRepository = categoryRepository;
+            _catalogCollection = database.GetEntityCollection<ProductItem>();
+            _categoryCollection = database.GetEntityCollection<Category>();
         }
 
-        public async Task<List<ProductItem>> GetCatalog()
+        public async Task<List<ProductItemOutput>> GetCatalog()
         {
-            return await _catalogRepository.AsQueryable().ToListAsync();
+            return await _catalogCollection.Find(FilterDefinition<ProductItem>.Empty).Project<ProductItem, ProductItemOutput>().ToListAsync();
         }
 
         public async Task CreateProduct(ProductInput productInput, IFile productImage)
         {
-            var product = new ProductItem()
+            var product = new ProductItem
             {
                 Name = productInput.Name,
                 MeasurementUnit = productInput.MeasurementUnit,
@@ -37,17 +35,12 @@ namespace API.Services.Catalog
                 Image = await ImageManipulation.GenerateProductImage(productImage)
             };
 
-            await _catalogRepository.InsertOne(product);
+            await _catalogCollection.InsertOneAsync(product);
         }
 
         public async Task<List<CategoryOutput>> GetCategories()
         {
-            return await _categoryRepository.GetAllAndProject(c => new CategoryOutput
-            {
-                Id = c.Id,
-                Name = c.Name,
-                IconName = c.IconName
-            });
+            return await _categoryCollection.Find(FilterDefinition<Category>.Empty).Project<Category, CategoryOutput>().ToListAsync();
         }
 
         public async Task CreateCategory(CategoryInput categoryInput)
@@ -57,7 +50,8 @@ namespace API.Services.Catalog
                 Name = categoryInput.Name,
                 IconName = categoryInput.IconName
             };
-            await _categoryRepository.InsertOne(category);
+
+            await _categoryCollection.InsertOneAsync(category);
         }
     }
 }

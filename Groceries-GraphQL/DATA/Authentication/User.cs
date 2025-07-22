@@ -1,11 +1,7 @@
 ﻿using DATA.Models.Shared;
-using DATA.Shared;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
 
 namespace DATA.Authentication
 {
-    [BsonCollection("users")]
     public class User : Entity
     {
         public string FirstName { get; set; }

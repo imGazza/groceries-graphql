@@ -1,4 +1,4 @@
-﻿using API.Schema.Mutations.UserGroceryList.Model;
+﻿using API.Records;
 using API.Services.UserGroceryList;
 using DATA.Models;
 using HotChocolate.Authorization;
@@ -15,7 +15,5 @@ namespace API.Schema.Mutations.UserGroceryList
             var userId = claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
             return await _userGroceryListService.CreateUserGroceryList(groceryListInput, userId);
         }
-
-        public async Task<GroceryList> 
     }
 }

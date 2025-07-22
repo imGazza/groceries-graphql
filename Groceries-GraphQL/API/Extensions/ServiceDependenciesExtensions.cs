@@ -1,5 +1,4 @@
 ﻿using API.Services.Shared;
-using DATA.Repository;
 using MongoDB.Driver;
 
 namespace API.Extensions
@@ -23,12 +22,6 @@ namespace API.Extensions
                 var client = sp.GetRequiredService<IMongoClient>();
                 return client.GetDatabase("GroceriesGraphQLDatabase");
             });
-            return builder;
-        }
-
-        public static WebApplicationBuilder AddBaseRepositories(this WebApplicationBuilder builder)
-        {
-            builder.Services.AddScoped(typeof(IMongoRepository<>), typeof(MongoRepository<>));
             return builder;
         }
 

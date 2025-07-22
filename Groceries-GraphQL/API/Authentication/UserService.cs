@@ -1,30 +1,30 @@
 ﻿using API.Schema.Mutations.Authentication.Models;
 using API.Services.Shared;
 using DATA.Authentication;
-using DATA.Repository;
-using System.ComponentModel;
+using DATA.Models._Shared;
+using MongoDB.Driver;
 
 namespace API.Authentication
 {
     public class UserService : IUserService, IInjectableService
     {
-        private readonly IMongoRepository<User> _userRepository;
-        private readonly IMongoRepository<RefreshToken> _refreshTokenRepository;
+        private readonly IMongoCollection<User> _userCollection;
+        private readonly IMongoCollection<RefreshToken> _refreshTokenCollection;
 
-        public UserService(IMongoRepository<User> userRepository, IMongoRepository<RefreshToken> refreshTokenRepository)
+        public UserService(IMongoDatabase database)
         {
-            _userRepository = userRepository;
-            _refreshTokenRepository = refreshTokenRepository;
+            _userCollection = database.GetEntityCollection<User>();
+            _refreshTokenCollection = database.GetEntityCollection<RefreshToken>();
         }
 
         public async Task<User> GetUserByEmail(string email)
         {
-            return await _userRepository.FindOne(user => user.Email == email);
+            return await _userCollection.Find(user => user.Email == email).SingleOrDefaultAsync();
         }
 
         public async Task<User> GetUserById(string id)
         {
-            return await _userRepository.FindOne(user => user.Id == id);
+            return await _userCollection.Find(user => user.Id == id).FirstOrDefaultAsync();
         }
 
         public async Task CreateUser(RegisterInput registerData)
@@ -44,7 +44,7 @@ namespace API.Authentication
             };
             registerData.Password = null; // Clear password ASAP
 
-            await _userRepository.InsertOne(user);
+            await _userCollection.InsertOneAsync(user);
         }
 
         public bool IsValidPassword(string password, string userPasswordHash)
@@ -54,29 +54,32 @@ namespace API.Authentication
 
         public async Task AddRefreshToken(RefreshToken refreshToken)
         {
-            await _refreshTokenRepository.InsertOne(refreshToken);
+            await _refreshTokenCollection.InsertOneAsync(refreshToken);
         }
 
         public async Task<bool> IsRefreshTokenValid(string userId, string token)
         {
-            var refreshToken = await GetValidRefreshToken(userId, token);
-            return refreshToken != null;
+            return await _refreshTokenCollection.CountDocumentsAsync(FilterValidRefreshToken(userId, token)) > 0;
         }
 
-        public async Task RevokeRefreshToken(string userId, string token)
+        public async Task<RefreshToken> RevokeRefreshToken(string userId, string token)
         {
-            var refreshToken = await GetValidRefreshToken(userId, token);
+            UpdateDefinition<RefreshToken> update = Builders<RefreshToken>.Update
+                .Set(rt => rt.IsRevoked, true);
 
-            if(refreshToken != null)
-            {
-                refreshToken.IsRevoked = true;
-                await _refreshTokenRepository.ReplaceOne(refreshToken);
-            }
+            return await _refreshTokenCollection.FindOneAndUpdateAsync(
+                FilterValidRefreshToken(userId, token),
+                update);
         }
 
-        private async Task<RefreshToken> GetValidRefreshToken(string userId, string token)
+        private FilterDefinition<RefreshToken> FilterValidRefreshToken(string userId, string token)
         {
-            return await _refreshTokenRepository.FindOne(rt => rt.UserId == userId && rt.Token == token && !rt.IsRevoked && rt.ExpiresAt > DateTime.Now);
+            return Builders<RefreshToken>.Filter.And(
+                Builders<RefreshToken>.Filter.Eq(rt => rt.UserId, userId),
+                Builders<RefreshToken>.Filter.Eq(rt => rt.Token, token),
+                Builders<RefreshToken>.Filter.Eq(rt => rt.IsRevoked, false),
+                Builders<RefreshToken>.Filter.Gt(rt => rt.ExpiresAt, DateTime.Now)
+            );
         }
     }
 }

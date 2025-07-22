@@ -1,5 +1,4 @@
 ﻿using DATA.Models;
-using DATA.Models.Shared;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 

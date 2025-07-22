@@ -1,4 +1,5 @@
-﻿using API.Schema.Mutations.Catalog.Models;
+﻿
+using API.Records;
 using API.Services.Catalog;
 
 namespace API.Schema.Mutations.Catalog

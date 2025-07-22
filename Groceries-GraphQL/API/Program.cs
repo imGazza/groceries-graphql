@@ -15,7 +15,6 @@ builder.AddMongoDBClient();
 builder.AddMongoDBDatabase();
 
 // Repositories and services
-builder.AddBaseRepositories();
 builder.AddServices();
 
 // JWT Authentication

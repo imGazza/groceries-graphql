@@ -1,4 +1,4 @@
-﻿using API.Schema.Mutations.UserGroceryList.Model;
+﻿using API.Records;
 using DATA.Models;
 
 namespace API.Services.UserGroceryList

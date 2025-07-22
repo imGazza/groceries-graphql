@@ -1,24 +1,25 @@
-﻿using API.Projections;
-using API.Schema.Mutations.UserGroceryList.Model;
+﻿using API.Records;
 using API.Services.Shared;
 using DATA.Models;
-using DATA.Repository;
+using DATA.Models._Shared;
 using MongoDB.Driver;
 
 namespace API.Services.UserGroceryList
 {
     public class UserGroceryListService : IUserGroceryListService, IInjectableService
     {
-        private readonly IMongoRepository<GroceryList> _groceryListRepository;
+        private readonly IMongoCollection<GroceryList> _groceryListCollection;
 
-        public UserGroceryListService(IMongoRepository<GroceryList> groceryListRepository)
+        public UserGroceryListService(IMongoDatabase database)
         {
-            _groceryListRepository = groceryListRepository;
+            _groceryListCollection = database.GetEntityCollection<GroceryList>();
         }
 
         public async Task<List<GroceryListOutput>> GetUserGroceryLists(string userId)
         {
-            return await _groceryListRepository.FilterAndProject(x => x.UserId == userId, GroceryListOutputProjection.Project());
+            var projection = Builders<GroceryList>.Projection.As<GroceryListOutput>();
+
+            return await _groceryListCollection.Find(x => x.UserId == userId).Project(projection).ToListAsync();
         }
 
         public async Task<GroceryList> CreateUserGroceryList(GroceryListInput groceryListInput, string userId)
@@ -29,24 +30,26 @@ namespace API.Services.UserGroceryList
             {
                 UserId = userId,
                 TotalPrice = CalculateTotalPrice(groceryListInput.Items),
-                Items = groceryListInput.Items
+                Items = groceryListInput.Items,
+                Status = GroceryListStatus.Draft
             };
 
-            return await _groceryListRepository.InsertOne(groceryList);            
+            await _groceryListCollection.InsertOneAsync(groceryList);
+            return groceryList;
         }
 
-        public async Task<GroceryListOutput> UpdateGroceryListProducts(GroceryUpdateProductsInput groceryUpdateProducts)
-        {
-            // Anti-pattern: keeping the update definition here to avoid creating custom repositories for each entity
-            // Could be resolved calling ReplaceOne intead of UpdateOne, but it would require fetching the whole entity first
+        public async Task<GroceryListOutput> UpdateGroceryListProducts(GroceryListUpdateInput groceryListUpdateInput)
+        {            
             var updateDefinition = Builders<GroceryList>.Update
-                .Set(gl => gl.Items, groceryUpdateProducts.Items)
-                .Set(gl => gl.TotalPrice, CalculateTotalPrice(groceryUpdateProducts.Items));
+                .Set(gl => gl.Items, groceryListUpdateInput.Items)
+                .Set(gl => gl.TotalPrice, CalculateTotalPrice(groceryListUpdateInput.Items));
 
-            return await _groceryListRepository.UpdateOne(
-                gl => gl.Id == groceryUpdateProducts.GroceryListId,
+            var projection = Builders<GroceryList>.Projection.As<GroceryListOutput>();
+
+            return await _groceryListCollection.FindOneAndUpdateAsync(
+                gl => gl.Id == groceryListUpdateInput.GroceryListId,
                 updateDefinition,
-                GroceryListOutputProjection.Project()
+                new FindOneAndUpdateOptions<GroceryList, GroceryListOutput> { ReturnDocument = ReturnDocument.After, Projection = projection }
             );
         }
 

@@ -1,9 +1,7 @@
 ﻿using DATA.Models.Shared;
-using DATA.Shared;
 
 namespace DATA.Models
 {
-    [BsonCollection("groceryLists")]
     public class GroceryList : Entity
     {        
         public string UserId { get; set; }

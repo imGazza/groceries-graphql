@@ -11,7 +11,6 @@ namespace API.Authentication
         bool IsValidPassword(string password, string userPasswordHash);
         Task AddRefreshToken(RefreshToken refreshToken);
         Task<bool> IsRefreshTokenValid(string userId, string token);
-        Task RevokeRefreshToken(string userId, string token);
-
+        Task<RefreshToken> RevokeRefreshToken(string userId, string token);
     }
 }

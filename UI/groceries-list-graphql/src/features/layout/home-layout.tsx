@@ -14,7 +14,7 @@ const HomeLayout = () => {
 				<div>
 					<Banner />
 				</div>
-			</div>
+			</div>			
 		</div>
 	)
 }
