@@ -1,7 +1,7 @@
 ﻿using API.Schema.Mutations.Authentication.Models;
 using API.Services.Shared;
 using DATA.Authentication;
-using DATA.Models._Shared;
+using DATA.Extensions;
 using MongoDB.Driver;
 
 namespace API.Authentication

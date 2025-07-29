@@ -2,7 +2,7 @@
 using Humanizer;
 using MongoDB.Driver;
 
-namespace DATA.Models._Shared
+namespace DATA.Extensions
 {
     public static class MongoDBExtension
     {

@@ -1,7 +1,8 @@
-﻿using API.Records;
+﻿using API.Projections;
+using API.Records;
 using API.Services.Shared;
+using DATA.Extensions;
 using DATA.Models;
-using DATA.Models._Shared;
 using MongoDB.Driver;
 
 namespace API.Services.UserGroceryList
@@ -38,18 +39,39 @@ namespace API.Services.UserGroceryList
             return groceryList;
         }
 
-        public async Task<GroceryListOutput> UpdateGroceryListProducts(GroceryListUpdateInput groceryListUpdateInput)
-        {            
+        public async Task<GroceryListOutput> AddGroceryItem(GroceryItem item, string groceryListId)
+        {
             var updateDefinition = Builders<GroceryList>.Update
-                .Set(gl => gl.Items, groceryListUpdateInput.Items)
-                .Set(gl => gl.TotalPrice, CalculateTotalPrice(groceryListUpdateInput.Items));
-
-            var projection = Builders<GroceryList>.Projection.As<GroceryListOutput>();
+                .AddToSet(gl => gl.Items, item)
+                .Inc(gl => gl.TotalPrice, item.Quantity * item.UnitPrice); // Qauntity should always be one when adding the new item
 
             return await _groceryListCollection.FindOneAndUpdateAsync(
-                gl => gl.Id == groceryListUpdateInput.GroceryListId,
+                gl => gl.Id == groceryListId,
                 updateDefinition,
-                new FindOneAndUpdateOptions<GroceryList, GroceryListOutput> { ReturnDocument = ReturnDocument.After, Projection = projection }
+                new FindOneAndUpdateOptions<GroceryList, GroceryListOutput> { ReturnDocument = ReturnDocument.After, Projection = ProjectionMappings<GroceryList, GroceryListOutput>.Projection }
+            );
+        }
+
+        public async Task<GroceryListOutput> DecreaseGroceryItemQuantity(GroceryItem item, string groceryListId)
+        {
+            return await UpdateGroceryItemQuantity(item, groceryListId, -item.UnitPrice);
+        }
+
+        public async Task<GroceryListOutput> IncreaseGroceryItemQuantity(GroceryItem item, string groceryListId)
+        {
+            return await UpdateGroceryItemQuantity(item, groceryListId, item.UnitPrice);
+        }
+
+        public async Task<GroceryListOutput> RemoveGroceryItem(GroceryItem item, string groceryListId)
+        {
+            var updateDefinition = Builders<GroceryList>.Update
+                .PullFilter(gl => gl.Items, i => i.ProductItemId == item.ProductItemId)
+                .Inc(gl => gl.TotalPrice, -(item.Quantity * item.UnitPrice)); // Remove item total price
+
+            return await _groceryListCollection.FindOneAndUpdateAsync(
+                gl => gl.Id == groceryListId,
+                updateDefinition,
+                new FindOneAndUpdateOptions<GroceryList, GroceryListOutput> { ReturnDocument = ReturnDocument.After, Projection = ProjectionMappings<GroceryList, GroceryListOutput>.Projection }
             );
         }
 
@@ -71,6 +93,29 @@ namespace API.Services.UserGroceryList
         private decimal CalculateTotalPrice(List<GroceryItem> groceryItems)
         {
             return groceryItems.Sum(item => item.Quantity * item.UnitPrice);
+        }
+
+        private async Task<GroceryListOutput> UpdateGroceryItemQuantity(GroceryItem item, string groceryListId, decimal priceChange)
+        {
+            var filter = GroceryItemFilter(groceryListId, item.ProductItemId);
+
+            var updateDefinition = Builders<GroceryList>.Update
+                .Set("Items.$.Quantity", item.Quantity)
+                .Inc(gl => gl.TotalPrice, priceChange);
+
+            return await _groceryListCollection.FindOneAndUpdateAsync(
+                filter,
+                updateDefinition,
+                new FindOneAndUpdateOptions<GroceryList, GroceryListOutput> { ReturnDocument = ReturnDocument.After, Projection = ProjectionMappings<GroceryList, GroceryListOutput>.Projection }
+            );
+        }
+
+        private FilterDefinition<GroceryList> GroceryItemFilter(string groceryListId, string groceryProductId)
+        {
+            return Builders<GroceryList>.Filter.And(
+                Builders<GroceryList>.Filter.Eq(gl => gl.Id, groceryListId),
+                Builders<GroceryList>.Filter.ElemMatch(gl => gl.Items, i => i.ProductItemId == groceryProductId)
+            );
         }
     }
 }

@@ -7,5 +7,9 @@ namespace API.Services.UserGroceryList
     {
         Task<List<GroceryListOutput>> GetUserGroceryLists(string userId);
         Task<GroceryList> CreateUserGroceryList(GroceryListInput groceryListInput, string userId);
+        Task<GroceryListOutput> AddGroceryItem(GroceryItem item, string groceryListId);
+        Task<GroceryListOutput> DecreaseGroceryItemQuantity(GroceryItem item, string groceryListId);
+        Task<GroceryListOutput> IncreaseGroceryItemQuantity(GroceryItem item, string groceryListId);
+        Task<GroceryListOutput> RemoveGroceryItem(GroceryItem item, string groceryListId);
     }
 }
