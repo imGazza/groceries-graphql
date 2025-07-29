@@ -13,6 +13,6 @@ export const GET_CATEGORIES: TypedDocumentNode<CategoryData, {}> = gql`
 export interface CategoryData{
   categories: [{
 	name: string,
-	  iconName: string
-  }]	
+	iconName: string
+  }]
 }

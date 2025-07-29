@@ -1,5 +1,6 @@
 import Banner from "../home/banner"
 import Categories from "../home/categories"
+import LatestProducts from "../home/latest-products"
 
 const HomeLayout = () => {
 
@@ -13,6 +14,11 @@ const HomeLayout = () => {
 			<div className="grid col-span-7">
 				<div>
 					<Banner />
+				</div>
+			</div>	
+			<div className="grid col-span-10">
+				<div>
+					<LatestProducts />
 				</div>
 			</div>			
 		</div>

@@ -1,4 +1,5 @@
-﻿using DATA.Models;
+﻿using API.Projections;
+using DATA.Models;
 
 namespace API.Records
 {
@@ -11,7 +12,7 @@ namespace API.Records
 
     #region Output Records
 
-    public record GroceryListOutput(string UserId, decimal TotalPrice, GroceryListStatus Status, DateTime? CompletedAt, List<GroceryItem> Items);
+    public record GroceryListOutput(string Id, string UserId, decimal TotalPrice, GroceryListStatus Status, DateTime? CompletedAt, List<GroceryItem> Items): Record(Id), IProjectionOutput;
 
     #endregion
 }

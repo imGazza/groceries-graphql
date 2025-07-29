@@ -51,7 +51,8 @@
 
   /* Custom */
   --custom: oklch(0.5925 0.1782 146.53);
-  --pacifico-font: 'Pacifico', system-ui, Avenir, Helvetica, Arial, sans-serif
+  --pacifico-font: 'Pacifico', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --tiny: 0.625rem;
 }
 
 .dark {
@@ -89,6 +90,7 @@
 
   /* Custom */
   --custom: oklch(0.5925 0.1782 146.53);
+  --tiny: 0.625rem;
 }
 
 @theme inline {
@@ -130,6 +132,8 @@
 
   /* Custom */
   --color-custom: var(--custom);
+  --text-tiny: var(--tiny);
+  --text-tiny--line-height: var(--line-height); 
 }
 
 @layer base {

@@ -38,6 +38,18 @@ namespace API.Services.Catalog
             await _catalogCollection.InsertOneAsync(product);
         }
 
+        public async Task<ProductItemOutput> UpdateProductImage(string productId, IFile productImage)
+        {
+            var updateDefinition = Builders<ProductItem>.Update
+                .Set(gl => gl.Image, await ImageManipulation.GenerateProductImage(productImage));
+
+            return await _catalogCollection.FindOneAndUpdateAsync(
+                gl => gl.Id == productId,
+                updateDefinition,
+                new FindOneAndUpdateOptions<ProductItem, ProductItemOutput> { ReturnDocument = ReturnDocument.After, Projection = ProjectionMappings<ProductItem, ProductItemOutput>.Projection }
+            ); 
+        }
+
         public async Task<List<CategoryOutput>> GetCategories()
         {
             return await _categoryCollection.Find(FilterDefinition<Category>.Empty).Project<Category, CategoryOutput>().ToListAsync();

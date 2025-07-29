@@ -16,6 +16,14 @@ namespace API.Schema.Mutations.Catalog
             return true;
         }
 
+        public async Task<ProductItemOutput> UpdateProductImage(string productId, IFile productImage, [Service] ICatalogService _catalogService)
+        {
+            if (string.IsNullOrEmpty(productId) || productImage == null)
+                return null;
+
+            return await _catalogService.UpdateProductImage(productId, productImage);
+        }
+
         public async Task<bool> CreateCategory(CategoryInput categoryInput, [Service] ICatalogService _catalogService)
         {
             if (categoryInput == null)

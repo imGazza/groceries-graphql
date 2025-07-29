@@ -7,9 +7,9 @@ interface IconButtonProps {
 	className?: string;
 }
 
-const IconButton = ({ children, className }: IconButtonProps) => {
+const IconButton = ({ children, className, ...props }: IconButtonProps & React.ComponentProps<typeof Button>) => {
 	return (
-		<Button 
+		<Button {...props}
 			className={cn("shadow-slate-300", className)} variant="secondary" size="icon">
 				{children}
 		</Button>

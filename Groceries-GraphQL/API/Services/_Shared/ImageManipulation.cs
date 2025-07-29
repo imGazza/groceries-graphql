@@ -69,7 +69,8 @@ namespace API.Services.Shared
                 .Resize(new ResizeOptions
                 {
                     Size = new Size(targetWidth, targetHeight),
-                    Mode = ResizeMode.Crop, // This crops to exact dimensions
+                    Mode = ResizeMode.Pad, // Resize the image with padding if different aspect ratio
+                    PadColor = Color.White,
                     Position = AnchorPositionMode.Center // Crop from center
                 }));
 
