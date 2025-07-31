@@ -1,0 +1,32 @@
+meta {
+  name: Increase Item Quantity
+  type: graphql
+  seq: 4
+}
+
+post {
+  url: https://localhost:7298/graphql
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation IncreaseQuantityGroceryItem($groceryItem: GroceryItemInput!, $groceryListId: String) {
+    increaseQuantity(item: $groceryItem, groceryListId: $groceryListId){
+      id,
+      userId
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "groceryItem": {
+      "productItemId": "687fc4523754209f4260d2cc",
+      "productItemName": "Cabbage",
+      "quantity": 4,
+      "unitPrice": 0.5
+    },
+    "groceryListId": "688b6544f77dadbe36fc33b7"
+  }
+}
