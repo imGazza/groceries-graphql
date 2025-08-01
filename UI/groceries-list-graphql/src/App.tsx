@@ -4,6 +4,7 @@ import ActiveSectionProvider from './provider/active-section/active-section-prov
 import HomeLayout from './features/layout/home-layout'
 import { ApolloProvider } from '@apollo/client'
 import apolloClient from './http/apollo-client'
+import Footer from './features/layout/footer'
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <ActiveSectionProvider>
         <TopBar />
         <HomeLayout />
+        <Footer />
       </ActiveSectionProvider>
     </ApolloProvider>
   )

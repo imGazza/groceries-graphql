@@ -17,7 +17,8 @@ const TopBar = () => {
 	]
 
 	return (
-		<div className="flex justify-between gap-2 py-4">
+		<div className="container-wrapper">
+			<div className="container items-center flex justify-between gap-2 py-6">
 			<div className="groceries-logo pacifico-font">
 				Groceries
 			</div>
@@ -27,7 +28,7 @@ const TopBar = () => {
 						{menuItems.map(item => (
 							<NavigationMenuItem key={item.id}>
 								<NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-									<Link href="#" className={activeSection === item.id ? 'text-custom': ''} onClick={() => setActiveSection(item.id)}>
+									<Link href="#" className={activeSection === item.id ? 'text-custom' : ''} onClick={() => setActiveSection(item.id)}>
 										{item.value}
 									</Link>
 								</NavigationMenuLink>
@@ -43,6 +44,7 @@ const TopBar = () => {
 				<IconButton><ShoppingBasket /></IconButton>
 			</div>
 		</div>
+		</div>		
 	)
 }
 export default TopBar;

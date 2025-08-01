@@ -3,6 +3,8 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@custom-variant fixed (&:is(.layout-fixed *));
+
 :root {
   font-family: 'Geist', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -93,7 +95,9 @@
   --tiny: 0.625rem;
 }
 
-@theme inline {
+@theme inline {  
+  --breakpoint-3xl: 1600px;
+  --breakpoint-4xl: 2000px;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -153,4 +157,12 @@
   font-size: x-large;
   margin-top: -4px;
   cursor: default;
+}
+
+@utility container-wrapper {
+  @apply 3xl:fixed:max-w-[calc(var(--breakpoint-2xl)+2rem)] mx-auto w-full px-2;
+}
+
+@utility container {
+  @apply 3xl:max-w-screen-2xl mx-auto max-w-[1400px] px-4 lg:px-8;
 }

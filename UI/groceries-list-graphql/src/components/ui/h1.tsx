@@ -2,7 +2,7 @@ import type { ReactNode } from "react"
 
 const H1 = ({ children }: { children: ReactNode }) => {
 	return (
-		<h1 className="text-4xl font-semibold text-balance text-left tracking-tighter">
+		<h1 className="text-4xl text-foreground/85 font-semibold text-balance text-left tracking-tighter">
 			{children}
 		</h1>
 	)
