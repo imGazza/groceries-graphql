@@ -1,4 +1,5 @@
 import IconButton from "@/components/ui/icon-button"
+import Logo from "@/components/ui/logo"
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, navigationMenuTriggerStyle } from "@/components/ui/navigation-menu"
 import SearchBar from "@/components/ui/searchbar"
 import useActiveSection from "@/hooks/use-active-section"
@@ -19,9 +20,7 @@ const TopBar = () => {
 	return (
 		<div className="container-wrapper">
 			<div className="container items-center flex justify-between gap-2 py-6">
-			<div className="groceries-logo pacifico-font">
-				Groceries
-			</div>
+			<Logo />
 			<div className="mr-20">
 				<NavigationMenu viewport={false}>
 					<NavigationMenuList>

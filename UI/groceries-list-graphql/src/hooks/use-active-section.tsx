@@ -5,7 +5,7 @@ const useActiveSection = () => {
 	const context = useContext(ActiveSectionContext);
 
 	if (context === undefined)
-		throw new Error("useTheme deve essere usato all'interno di un ThemeProvider")
+		throw new Error("useActiveSection must be in a ActiveSectionProvider")
 
 	return context
 }

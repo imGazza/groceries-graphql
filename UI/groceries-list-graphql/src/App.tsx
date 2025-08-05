@@ -1,19 +1,25 @@
 import './App.css'
 import TopBar from './features/layout/top-bar'
 import ActiveSectionProvider from './provider/active-section/active-section-provider'
-import HomeLayout from './features/layout/home-layout'
 import { ApolloProvider } from '@apollo/client'
 import apolloClient from './http/apollo-client'
 import Footer from './features/layout/footer'
+import DraftListProvider from './provider/draft-list/draft-list-provider'
+import AuthProvider from './provider/auth/auth-provider'
+import { Outlet } from 'react-router'
 
 function App() {
   return (
     <ApolloProvider client={apolloClient}>
-      <ActiveSectionProvider>
-        <TopBar />
-        <HomeLayout />
-        <Footer />
-      </ActiveSectionProvider>
+      <AuthProvider>
+        <ActiveSectionProvider>
+          <DraftListProvider>
+            <TopBar />
+            <Outlet />
+            <Footer />
+          </DraftListProvider>
+        </ActiveSectionProvider>
+      </AuthProvider>
     </ApolloProvider>
   )
 }

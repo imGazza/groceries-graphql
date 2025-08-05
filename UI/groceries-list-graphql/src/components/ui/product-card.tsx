@@ -5,7 +5,7 @@ import IconButton from "./icon-button";
 import { useState } from "react";
 import ConfirmDialog from "./confirm-dialog";
 import { useMutation } from "@apollo/client";
-import { ADD_ITEM, DECREASE_QUANTITY, INCREASE_QUANTITY, REMOVE_ITEM } from "@/http/grocery list";
+import { ADD_ITEM, DECREASE_QUANTITY, INCREASE_QUANTITY, REMOVE_ITEM } from "@/http/grocery-list";
 
 interface ProductCardProps {
 	product: Product;

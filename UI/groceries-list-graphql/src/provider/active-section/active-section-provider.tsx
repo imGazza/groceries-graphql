@@ -1,5 +1,4 @@
 import { useMemo, useState } from "react"
-import { RouterProvider } from "react-router";
 import { ActiveSectionContext } from "./active-section-context";
 
 interface ActiveSectionProps{
@@ -9,10 +8,6 @@ interface ActiveSectionProps{
 const ActiveSectionProvider = ({ children }: ActiveSectionProps) => {
 
 	const [section, setSection] = useState("home");
-
-	const setActiveSection = (section: string) => {
-		setActiveSection(section);
-	}
 
 	const value = useMemo(
 		() => {
