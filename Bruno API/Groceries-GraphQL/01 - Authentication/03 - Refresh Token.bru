@@ -10,32 +10,21 @@ post {
   auth: inherit
 }
 
-body:graphql {
-  mutation RefreshToken($user: UserInput!){
-    refreshToken(user: $user){
-      accessToken,
-      user{
-        email,
-        firstName,
-        lastName      
-      }
-    }
-  }
+headers {
+  Cookie: refreshToken=IgRI9PO/juF6qHSWMb03pUgcO1DRnRSIwn0z9Pvzygs=
 }
 
-body:graphql:vars {
-  {
-    "user": {
-      "id": "6866a2e930646f013bf9bbb9",
-      "createdAt": "2025-07-03T15:34:01.576Z",
-      "updatedAt": "2025-07-03T15:34:01.446Z",
-      "firstName": "Luca",
-      "lastName": "Gazzardi",
-      "passwordHash": "$2a$11$u2Excao/cMXSJD8mXWe/EeXn4YLWtZYbCXHVgSh3E9TZsBTsVbRHu",
-      "email": "gazzardi.luca@gmail.com",
-      "roles": [
-        "User"
-      ]
+body:graphql {
+  mutation RefreshToken(){
+    refreshToken(){
+      accessToken,
+      user{
+        id,
+        email,
+        firstName,
+        lastName,
+        roles
+      }
     }
   }
 }

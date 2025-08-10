@@ -15,6 +15,21 @@ export const LOGIN: TypedDocumentNode<LoginOutput, LoginInput> = gql`
 	}
 `;
 
+export const REFRESH_TOKEN: TypedDocumentNode<RefreshTokenOutput, {}> = gql`
+  mutation RefreshToken{
+    refreshToken{
+      accessToken,
+      user{
+				id,
+        email,
+        firstName,
+        lastName,
+				roles
+      }
+    }
+  }
+`;
+
 export interface LoginInput {
 	loginInput: {
 		email: string,
@@ -23,10 +38,11 @@ export interface LoginInput {
 }
 
 export interface LoginOutput {
-	loginUser: {
-		accessToken: string,
-		user: User
-	}
+	loginUser: UserData;
+}
+
+export interface RefreshTokenOutput {
+	refreshToken: UserData;
 }
 
 export interface User {

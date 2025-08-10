@@ -10,7 +10,7 @@ namespace API.Authentication
         Task CreateUser(RegisterInput registerData);
         bool IsValidPassword(string password, string userPasswordHash);
         Task AddRefreshToken(RefreshToken refreshToken);
-        Task<bool> IsRefreshTokenValid(string userId, string token);
+        Task<RefreshToken> GetValidRefreshToken(string token);
         Task<RefreshToken> RevokeRefreshToken(string userId, string token);
     }
 }

@@ -54,16 +54,13 @@ namespace API.Schema.Mutations.Authentication
 
         public async Task<LoginOutput> RefreshToken
             (
-                User user,
                 [Service] IUserService _userService,
                 [Service] IJwtService _jwtService,
                 HttpContext httpContext
             )
         {
-            var refreshToken = httpContext.Request.Cookies["refreshToken"];
-
-            if (!await _userService.IsRefreshTokenValid(user.Id, refreshToken))
-                throw new GraphQLException("Refresh token is invalid");
+            var validRefreshToken = await ValidateRefreshToken(_userService, httpContext.Request.Cookies["refreshToken"]);
+            var user = await _userService.GetUserById(validRefreshToken.UserId);
 
             string newAccessToken = _jwtService.GenerateAccessToken(user);
 
@@ -103,6 +100,11 @@ namespace API.Schema.Mutations.Authentication
             loginData.Password = null; // Clear password ASAP
         }
 
+        private async Task<RefreshToken> ValidateRefreshToken(IUserService _userService, string refreshToken)
+        {
+            return await _userService.GetValidRefreshToken(refreshToken) ?? throw new GraphQLException("Refresh token is invalid");
+        }
+
         private async Task AddRefreshTokenToUser(string userId, string token, IUserService _userService)
         {
             var refreshToken = new RefreshToken
@@ -121,8 +123,9 @@ namespace API.Schema.Mutations.Authentication
             {
                 HttpOnly = true,
                 Secure = true,
-                SameSite = SameSiteMode.Strict,
-                Expires = DateTime.Now.AddDays(RefreshTokenExpirationDays)
+                SameSite = SameSiteMode.None,
+                Expires = DateTime.Now.AddDays(RefreshTokenExpirationDays),
+                Path = "/"
             });
         }
     }

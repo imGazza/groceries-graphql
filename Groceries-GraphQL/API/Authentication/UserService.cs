@@ -57,9 +57,9 @@ namespace API.Authentication
             await _refreshTokenCollection.InsertOneAsync(refreshToken);
         }
 
-        public async Task<bool> IsRefreshTokenValid(string userId, string token)
+        public async Task<RefreshToken> GetValidRefreshToken(string token)
         {
-            return await _refreshTokenCollection.CountDocumentsAsync(FilterValidRefreshToken(userId, token)) > 0;
+            return await _refreshTokenCollection.Find(FilterValidRefreshToken(token)).SingleOrDefaultAsync();
         }
 
         public async Task<RefreshToken> RevokeRefreshToken(string userId, string token)
@@ -68,14 +68,13 @@ namespace API.Authentication
                 .Set(rt => rt.IsRevoked, true);
 
             return await _refreshTokenCollection.FindOneAndUpdateAsync(
-                FilterValidRefreshToken(userId, token),
+                FilterValidRefreshToken(token),
                 update);
         }
 
-        private FilterDefinition<RefreshToken> FilterValidRefreshToken(string userId, string token)
+        private FilterDefinition<RefreshToken> FilterValidRefreshToken(string token)
         {
             return Builders<RefreshToken>.Filter.And(
-                Builders<RefreshToken>.Filter.Eq(rt => rt.UserId, userId),
                 Builders<RefreshToken>.Filter.Eq(rt => rt.Token, token),
                 Builders<RefreshToken>.Filter.Eq(rt => rt.IsRevoked, false),
                 Builders<RefreshToken>.Filter.Gt(rt => rt.ExpiresAt, DateTime.Now)
