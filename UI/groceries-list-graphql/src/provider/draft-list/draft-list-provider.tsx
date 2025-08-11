@@ -10,8 +10,8 @@ interface DraftListProviderProps{
 
 const DraftListProvider = ({ children }: DraftListProviderProps) => {
 	const { user } = useAuth();
-	//const { data: fetchedList } = useQuery(GET_DRAFT_LIST, { variables: { userId: user?.id }, skip: !user });
-	const [draftList, setDraftList] = useState<GroceryList | null >(null);
+	const { data: draftGroceryList } = useQuery(GET_DRAFT_LIST, { variables: { userId: user?.id }, skip: !user });
+	const [draftList, setDraftList] = useState<GroceryList | null >(draftGroceryList?.userDraftGroceryList ?? null);
 
 	const value = useMemo(
 		() => {

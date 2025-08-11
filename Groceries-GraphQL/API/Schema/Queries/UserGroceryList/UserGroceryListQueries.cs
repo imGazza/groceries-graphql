@@ -11,5 +11,10 @@ namespace API.Schema.Queries.UserGroceryList
         {
             return await _userGroceryListService.GetUserGroceryLists(userId);
         }
+
+        public async Task<GroceryListOutput> UserDraftGroceryList(string userId, [Service] IUserGroceryListService _userGroceryListService)
+        {
+            return await _userGroceryListService.GetDraftUserGroceryLists(userId);
+        }
     }
 }

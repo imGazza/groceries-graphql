@@ -1,12 +1,17 @@
 import { gql, type TypedDocumentNode } from "@apollo/client";
 
-export const GET_DRAFT_LIST: TypedDocumentNode<GroceryList, string> = gql`
-  mutation AddItemGroceryList($groceryItem: GroceryItemInput!, $groceryListId: String) {
-    addItem(item: $groceryItem, groceryListId: $groceryListId){
-			id,
-			userId
+export const GET_DRAFT_LIST: TypedDocumentNode<UserDraftGroceryListOutput, string> = gql`
+  {userDraftGroceryList(userId: "688b630df77dadbe36fc33b4") {
+    id,
+    totalPrice,
+    completedAt,
+    items {
+      productItemId,
+      productItemName,
+      quantity,
+      unitPrice,
     }
-	}
+}}
 `;
 
 export const ADD_ITEM: TypedDocumentNode<ItemData, {}> = gql`
@@ -48,6 +53,10 @@ export const REMOVE_ITEM: TypedDocumentNode<ItemData, {}> = gql`
 		}
 	}
 `;
+
+interface UserDraftGroceryListOutput{
+	userDraftGroceryList: GroceryList;
+}
 
 export interface GroceryList {
 	id: string,

@@ -18,9 +18,12 @@ namespace API.Services.UserGroceryList
 
         public async Task<List<GroceryListOutput>> GetUserGroceryLists(string userId)
         {
-            var projection = Builders<GroceryList>.Projection.As<GroceryListOutput>();
+            return await _groceryListCollection.Find(gl => gl.UserId == userId).Project<GroceryList, GroceryListOutput>().ToListAsync();
+        }
 
-            return await _groceryListCollection.Find(x => x.UserId == userId).Project(projection).ToListAsync();
+        public async Task<GroceryListOutput> GetDraftUserGroceryLists(string userId)
+        {
+            return await _groceryListCollection.Find(gl => gl.UserId == userId && gl.Status == GroceryListStatus.Draft).Project<GroceryList, GroceryListOutput>().SingleOrDefaultAsync();
         }
 
         public async Task<GroceryList> CreateUserGroceryList(GroceryListInput groceryListInput, string userId)

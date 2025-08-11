@@ -20,8 +20,9 @@ function AuthProvider({children}: Readonly<AuthProviderProps>) {
     onCompleted: (data) => {
       setSessionUser(data.refreshToken);
     },
-    onError: (error) => {
-			// Error handling (Toast)
+    onError: () => {
+      localStorage.clear();
+			navigate("/login");
 		}
   });
 
@@ -43,18 +44,17 @@ function AuthProvider({children}: Readonly<AuthProviderProps>) {
 
   const removeSessionUser = () => {
     setUser(null);
-    localStorage.removeItem('user');
-    localStorage.removeItem('accessToken');
+    localStorage.clear();
     navigate('/login');
   }
 
   const userValue = useMemo(
     () => {
-        return {
-            user,
-            setSessionUser,
-            removeSessionUser
-        }
+      return {
+          user,
+          setSessionUser,
+          removeSessionUser
+      }
     }, [user]
   )
 
