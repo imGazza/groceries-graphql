@@ -5,12 +5,13 @@ import { useQuery } from "@apollo/client";
 
 const LatestProducts = () => {
 
-	const { data } = useQuery(GET_CATALOG);
+	const { data: catalogData } = useQuery(GET_CATALOG);
 
 	return(
 		<>
 			<H1>Latest products</H1>
-			<ProductDisplay catalogData={data!} />
+			<ProductDisplay products={catalogData?.catalog!} skeletonLoadingQty={6} />
+
 		</>		
 	)
 }

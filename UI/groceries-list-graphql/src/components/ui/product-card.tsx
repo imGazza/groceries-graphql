@@ -6,14 +6,16 @@ import { useState } from "react";
 import ConfirmDialog from "./confirm-dialog";
 import { useMutation } from "@apollo/client";
 import { ADD_ITEM, DECREASE_QUANTITY, INCREASE_QUANTITY, REMOVE_ITEM } from "@/http/grocery-list";
+import { Skeleton } from "./skeleton";
 
 interface ProductCardProps {
 	product: Product;
+	initialQuantity: number;
 }
 
-const ProductCard = ({ product }: ProductCardProps) => {
+const ProductCard = ({ product, initialQuantity }: ProductCardProps) => {
 
-	const [quantity, setQuantity] = useState(0);
+	const [quantity, setQuantity] = useState(initialQuantity);
 	const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
 	const [ addItem ] = useMutation(ADD_ITEM);
 	const [ increaseQuantity ] = useMutation(INCREASE_QUANTITY);
@@ -73,6 +75,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
 		}
 	}
 
+	if(!product){
+		return <ProductCardSkeleton />
+	}
+
 	return (
 		<Card className="gap-1.5 py-3">
 			<img src={imageUrl} alt={product.name} className="h-full object-cover object-bottom w-full" />
@@ -113,3 +119,21 @@ const ProductCard = ({ product }: ProductCardProps) => {
 	)
 }
 export default ProductCard;
+
+const ProductCardSkeleton = () => {
+	return (
+		<Card className="gap-1.5 py-3 pt-0">
+			<Skeleton className="h-37 w-full" />
+			<div className="p-3">
+				<Skeleton className="h-5 w-16 mb-1" />
+				<Skeleton className="h-4 w-full mb-1" />
+				<Skeleton className="h-3 w-20" />
+			</div>
+			
+			<div className="flex justify-end px-3">
+				<Skeleton className="h-8 w-8 rounded-full" />
+			</div>
+		</Card>
+	)
+}
+export { ProductCardSkeleton }
