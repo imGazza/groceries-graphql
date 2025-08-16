@@ -11,7 +11,6 @@ const LatestProducts = () => {
 		<>
 			<H1>Latest products</H1>
 			<ProductDisplay products={catalogData?.catalog!} skeletonLoadingQty={6} />
-
 		</>		
 	)
 }

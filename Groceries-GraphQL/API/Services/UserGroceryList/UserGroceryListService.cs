@@ -21,32 +21,32 @@ namespace API.Services.UserGroceryList
             return await _groceryListCollection.Find(gl => gl.UserId == userId).Project<GroceryList, GroceryListOutput>().ToListAsync();
         }
 
-        public async Task<GroceryListOutput> GetDraftUserGroceryLists(string userId)
+        public async Task<GroceryListOutput> GetDraftUserGroceryList(string userId)
         {
-            return await _groceryListCollection.Find(gl => gl.UserId == userId && gl.Status == GroceryListStatus.Draft).Project<GroceryList, GroceryListOutput>().SingleOrDefaultAsync();
+            var draftList = await _groceryListCollection.Find(gl => gl.UserId == userId && gl.Status == GroceryListStatus.Draft).Project<GroceryList, GroceryListOutput>().SingleOrDefaultAsync();
+
+            return draftList ?? await CreateUserGroceryList(userId);
         }
 
-        public async Task<GroceryList> CreateUserGroceryList(GroceryListInput groceryListInput, string userId)
+        private async Task<GroceryListOutput> CreateUserGroceryList(string userId)
         {
-            ValidateGroceryListInput(groceryListInput);
-
             var groceryList = new GroceryList
             {
                 UserId = userId,
-                TotalPrice = CalculateTotalPrice(groceryListInput.Items),
-                Items = groceryListInput.Items,
+                TotalPrice = 0,
+                Items = new List<GroceryItem>(),
                 Status = GroceryListStatus.Draft
             };
 
             await _groceryListCollection.InsertOneAsync(groceryList);
-            return groceryList;
+            return new GroceryListOutput(groceryList.Id, groceryList.UserId, groceryList.TotalPrice, groceryList.Status, groceryList.CompletedAt, groceryList.Items);            
         }
 
         public async Task<GroceryListOutput> AddGroceryItem(GroceryItem item, string groceryListId)
         {
             var updateDefinition = Builders<GroceryList>.Update
                 .AddToSet(gl => gl.Items, item)
-                .Inc(gl => gl.TotalPrice, item.Quantity * item.UnitPrice); // Qauntity should always be one when adding the new item
+                .Inc(gl => gl.TotalPrice, item.Quantity * item.UnitPrice); // Quantity should always be one when adding a new item
 
             return await _groceryListCollection.FindOneAndUpdateAsync(
                 gl => gl.Id == groceryListId,
@@ -76,21 +76,6 @@ namespace API.Services.UserGroceryList
                 updateDefinition,
                 new FindOneAndUpdateOptions<GroceryList, GroceryListOutput> { ReturnDocument = ReturnDocument.After, Projection = ProjectionMappings<GroceryList, GroceryListOutput>.Projection }
             );
-        }
-
-        private void ValidateGroceryListInput(GroceryListInput groceryListInput)
-        {
-            if (groceryListInput == null || !groceryListInput.Items.Any())
-                throw new ArgumentNullException(nameof(groceryListInput), "Invalid grocery list");
-
-            foreach (var item in groceryListInput.Items)
-            {
-                if (item.Quantity <= 0)
-                    throw new ArgumentException($"{item.ProductItemName}: item quantity must be greater than zero");
-
-                if (item.UnitPrice < 0)
-                    throw new ArgumentException($"{item.ProductItemName}: negative unit price");
-            }
         }
 
         private decimal CalculateTotalPrice(List<GroceryItem> groceryItems)

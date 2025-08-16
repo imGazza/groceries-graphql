@@ -6,6 +6,8 @@ import AuthLayout from "@/features/login/auth-layout";
 import App from "@/App";
 import Login from "@/features/login/login";
 import HomeLayout from "@/features/layout/home-layout";
+import AboutLayout from "@/features/layout/about-layout";
+import ProductsLayout from "@/features/layout/products-layout";
 
 // const UserDetail = lazy(() => import("@/01-features/admin/user-detail/user-detail"));
 // const CourseDetail = lazy(() => import("@/01-features/admin/course-detail/course-detail"));
@@ -30,6 +32,14 @@ export const router = createBrowserRouter([
 			{
 				index: true,
 				Component: HomeLayout,
+			},
+			{
+				path: '/products',
+				Component: ProductsLayout
+			},
+			{
+				path: '/about',
+				Component: AboutLayout
 			}
 		]
 	}

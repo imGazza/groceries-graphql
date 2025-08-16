@@ -131,7 +131,7 @@ const ProductCardSkeleton = () => {
 			</div>
 			
 			<div className="flex justify-end px-3">
-				<Skeleton className="h-8 w-8 rounded-full" />
+				<Skeleton className="h-8 w-8 rounded-md" />
 			</div>
 		</Card>
 	)

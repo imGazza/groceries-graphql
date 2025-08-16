@@ -1,7 +1,7 @@
 import { Input } from "./input";
 import SearchBarButton from "./searchbar-button";
 
-const SearchBar = () => {
+const TopbarSearchBar = () => {
 
 	return (
 		<div className="rounded-md flex bg-secondary shadow-2xs shadow-slate-300 overflow-hidden">
@@ -10,4 +10,4 @@ const SearchBar = () => {
 		</div>
 	)
 }
-export default SearchBar;
+export default TopbarSearchBar;

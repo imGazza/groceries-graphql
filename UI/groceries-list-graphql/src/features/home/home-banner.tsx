@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import H1 from "@/components/ui/h1";
 
-const Banner = () => {
+const HomeBanner = () => {
 	return (
 		<Card className="overflow-hidden py-0 rounded-md gap-0 text-sm font-semibold text-card-foreground/85 h-[500px]">
 			<div className="relative h-full w-full">
@@ -16,4 +16,4 @@ const Banner = () => {
 		</Card>
 	)
 }
-export default Banner;
+export default HomeBanner;

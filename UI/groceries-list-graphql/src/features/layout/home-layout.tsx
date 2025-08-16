@@ -1,8 +1,16 @@
-import Banner from "../home/banner"
+import useActiveSection from "@/hooks/use-active-section";
 import Categories from "../home/categories"
+import HomeBanner from "../home/home-banner"
 import LatestProducts from "../home/latest-products"
+import { useEffect } from "react";
 
 const HomeLayout = () => {
+
+	const { setActiveSection } = useActiveSection();
+	
+	useEffect(() => {
+		setActiveSection('home');
+	}, [setActiveSection]);
 
 	return (
 		<div className="container-wrapper">
@@ -14,7 +22,7 @@ const HomeLayout = () => {
 				</div>
 				<div className="grid col-span-7">
 					<div>
-						<Banner />
+						<HomeBanner />
 					</div>
 				</div>
 				<div className="grid col-span-10">

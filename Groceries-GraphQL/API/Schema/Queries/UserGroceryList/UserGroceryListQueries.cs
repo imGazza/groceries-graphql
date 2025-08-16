@@ -1,6 +1,5 @@
 ﻿using API.Records;
 using API.Services.UserGroceryList;
-using DATA.Models;
 using HotChocolate.Authorization;
 
 namespace API.Schema.Queries.UserGroceryList
@@ -16,7 +15,7 @@ namespace API.Schema.Queries.UserGroceryList
         [Authorize]
         public async Task<GroceryListOutput> UserDraftGroceryList(string userId, [Service] IUserGroceryListService _userGroceryListService)
         {
-            return await _userGroceryListService.GetDraftUserGroceryLists(userId);
+            return await _userGroceryListService.GetDraftUserGroceryList(userId);
         }
     }
 }
