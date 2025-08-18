@@ -12,15 +12,13 @@ import { Link } from "react-router"
 const TopBar = () => {
 
 	const { activeSection } = useActiveSection();
+	const { groceryList } = useDraftList();
 
 	const menuItems = [
 		{ id: 'home', value: 'Home', url: '/' },
 		{ id: 'products', value: 'Products', url: '/products' },
 		{ id: 'about', value: 'About', url: '/about' }
-
 	]
-
-	const { groceryList } = useDraftList();
 
 	return (
 		<div className="container-wrapper">

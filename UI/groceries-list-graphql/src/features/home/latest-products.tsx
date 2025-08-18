@@ -1,5 +1,5 @@
 import H1 from "@/components/ui/h1";
-import ProductDisplay from "@/components/ui/product-display";
+import ProductsDisplay from "@/components/ui/products-display";
 import { GET_CATALOG } from "@/http/catalog";
 import { useQuery } from "@apollo/client";
 
@@ -10,7 +10,7 @@ const LatestProducts = () => {
 	return(
 		<>
 			<H1>Latest products</H1>
-			<ProductDisplay products={catalogData?.catalog!} skeletonLoadingQty={6} />
+			<ProductsDisplay products={catalogData?.catalog!} skeletonLoadingQty={6} />
 		</>		
 	)
 }

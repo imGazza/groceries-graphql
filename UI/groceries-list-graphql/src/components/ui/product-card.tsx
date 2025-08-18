@@ -4,23 +4,21 @@ import { Minus, Plus, ShoppingCart } from "lucide-react";
 import IconButton from "./icon-button";
 import { useState } from "react";
 import ConfirmDialog from "./confirm-dialog";
-import { useMutation } from "@apollo/client";
-import { ADD_ITEM, DECREASE_QUANTITY, INCREASE_QUANTITY, REMOVE_ITEM } from "@/http/grocery-list";
 import { Skeleton } from "./skeleton";
 
 interface ProductCardProps {
 	product: Product;
 	initialQuantity: number;
+	addItem: (product: Product, quantity: number) => void;
+	increseQuantity: 	(product: Product, quantity: number) => void;
+	decreaseQuantity: (product: Product, quantity: number) => void;
+	removeItem: (product: Product, quantity: number) => void;
 }
 
-const ProductCard = ({ product, initialQuantity }: ProductCardProps) => {
+const ProductCard = ({ product, initialQuantity, addItem, increseQuantity, decreaseQuantity, removeItem }: ProductCardProps) => {
 
 	const [quantity, setQuantity] = useState(initialQuantity);
-	const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
-	const [ addItem ] = useMutation(ADD_ITEM);
-	const [ increaseQuantity ] = useMutation(INCREASE_QUANTITY);
-	const [ decreaseQuantity ] = useMutation(DECREASE_QUANTITY);
-	const [ removeItem ] = useMutation(REMOVE_ITEM);
+	const [openConfirmDialog, setOpenConfirmDialog] = useState(false);	
 
   const uint8Array = new Uint8Array(product.image.data);
   const imageUrl = URL.createObjectURL(new Blob([uint8Array], { type: 'image/jpeg' }));
@@ -28,51 +26,35 @@ const ProductCard = ({ product, initialQuantity }: ProductCardProps) => {
 	const currencyPrice = (price: number) => new Intl.NumberFormat('en-US', {
 		style: 'currency',
 		currency: 'EUR'
-	}).format(price);
+	}).format(price);	
 
-	const addItemToList = async (product: Product) => {
-		if(quantity !== 0){
-			return;
-		}
-		
-		await addItem({ variables: mapProductToGroceryItem(product, 1) });
+	const addItemToList = () => {
+		if(quantity !== 0) return;
+
+		addItem(product, quantity);
 		setQuantity(1);
 	}
 
-	const increaseItemQuantity = async (quantity: number) => {
-		if(quantity === 1){
-			return;
-		}
+	const increaseItemQuantity = (quantity: number) => {
+		if(quantity === 1) return;
 
-		await increaseQuantity({ variables: mapProductToGroceryItem(product, quantity) })
+		increseQuantity(product, quantity);
 		setQuantity(quantity);
 	}
 
-	const decreaseItemQuantity = async (quantity: number) => {
+	const decreaseItemQuantity = (quantity: number) => {
 		if(quantity === 0){
 			setOpenConfirmDialog(true);
 			return;
 		}
 
-		await decreaseQuantity({ variables: mapProductToGroceryItem(product, quantity) })
+		decreaseQuantity(product, quantity);
 		setQuantity(quantity);
 	}
 
-	const removeItemFromList = async () => {
-		await removeItem({ variables: mapProductToGroceryItem(product, 0) });
+	const removeItemFromList = () => {
+		removeItem(product, quantity);
 		setQuantity(0);
-	}
-
-	const mapProductToGroceryItem = (product: Product, quantity: number) => {
-		return {
-			groceryItem: {
-				productItemId: product.id,
-				productItemName: product.name,
-				quantity: quantity,
-				unitPrice: product.price
-			},
-			groceryListId: "688b6544f77dadbe36fc33b7"
-		}
 	}
 
 	if(!product){
@@ -96,7 +78,7 @@ const ProductCard = ({ product, initialQuantity }: ProductCardProps) => {
 			
 			{quantity === 0 ? 
 				(<div className="flex justify-end px-3">
-					<IconButton className="bg-custom text-secondary hover:bg-custom/80" onClick={() => addItemToList(product)}>
+					<IconButton className="bg-custom text-secondary hover:bg-custom/80" onClick={() => addItemToList()}>
 						<ShoppingCart className="w-4 h-4" />
 					</IconButton>
 				</div>)

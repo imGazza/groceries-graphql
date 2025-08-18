@@ -1,17 +1,21 @@
 import { gql, type TypedDocumentNode } from "@apollo/client";
 
-export const GET_DRAFT_LIST: TypedDocumentNode<UserDraftGroceryListOutput, string> = gql`
-  {userDraftGroceryList(userId: "688b630df77dadbe36fc33b4") {
-    id,
-    totalPrice,
-    completedAt,
-    items {
-      productItemId,
-      productItemName,
-      quantity,
-      unitPrice,
-    }
-}}
+export const GET_DRAFT_LIST: TypedDocumentNode<UserDraftGroceryListOutput, string> = gql`  
+	query UserDraftList($userId: String!){
+		userDraftGroceryList(userId: $userId) {
+			id,
+			userId,
+			totalPrice,
+			status,
+			completedAt,
+			items {
+				productItemId,
+				productItemName,
+				quantity,
+				unitPrice,
+			}
+		}
+	}	
 `;
 
 export const ADD_ITEM: TypedDocumentNode<ItemData, {}> = gql`
@@ -54,7 +58,7 @@ export const REMOVE_ITEM: TypedDocumentNode<ItemData, {}> = gql`
 	}
 `;
 
-interface UserDraftGroceryListOutput{
+interface UserDraftGroceryListOutput {
 	userDraftGroceryList: GroceryList;
 }
 
