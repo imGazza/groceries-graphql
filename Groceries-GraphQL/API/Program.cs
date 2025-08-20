@@ -2,6 +2,7 @@ using API.Authentication;
 using API.Extensions;
 using API.Schema.Mutations;
 using API.Schema.Queries;
+using API.Schema.Queries.Catalog;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -39,9 +40,13 @@ builder.Services
     .AddGraphQLServer()
     .AddAuthorization()
     .AddQueryType<Query>()
+    .AddMongoDbPagingProviders()
+    .AddMongoDbProjections()
     .AddMutationType<Mutation>()
     .AddTypes()
-    .AddType<UploadType>();
+    .AddType<UploadType>()
+    .AddTypeExtension<CatalogConnectionExtensions>();
+    
 
 builder.Services.AddAuthorization();
 

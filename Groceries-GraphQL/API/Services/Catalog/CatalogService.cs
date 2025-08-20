@@ -3,6 +3,7 @@ using API.Records;
 using API.Services.Shared;
 using DATA.Extensions;
 using DATA.Models;
+using HotChocolate.Data;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
@@ -19,9 +20,9 @@ namespace API.Services.Catalog
             _categoryCollection = database.GetEntityCollection<Category>();
         }
 
-        public async Task<List<ProductItemOutput>> GetCatalog()
+        public IExecutable<ProductItem> GetCatalog()
         {
-            return await _catalogCollection.Find(FilterDefinition<ProductItem>.Empty).Project<ProductItem, ProductItemOutput>().ToListAsync();
+            return _catalogCollection.AsExecutable();
         }
 
         public async Task CreateProduct(ProductInput productInput, IFile productImage)
