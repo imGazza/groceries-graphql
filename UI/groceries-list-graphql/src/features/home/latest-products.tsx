@@ -10,7 +10,8 @@ const LatestProducts = () => {
 	return(
 		<>
 			<H1>Latest products</H1>
-			<ProductsDisplay products={catalogData?.catalog!} skeletonLoadingQty={6} />
+			<ProductsDisplay products={catalogData?.catalog.nodes!} skeletonLoadingQty={6} />
+
 		</>		
 	)
 }

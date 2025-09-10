@@ -4,6 +4,7 @@ using API.Services.Shared;
 using DATA.Extensions;
 using DATA.Models;
 using HotChocolate.Data;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
@@ -20,9 +21,27 @@ namespace API.Services.Catalog
             _categoryCollection = database.GetEntityCollection<Category>();
         }
 
-        public IExecutable<ProductItem> GetCatalog()
+        public IExecutable<ProductItem> GetCatalog(string searchTerm, string categoryId)
         {
-            return _catalogCollection.AsExecutable();
+            var filters = new List<FilterDefinition<ProductItem>>();
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                filters.Add(Builders<ProductItem>.Filter.Regex("Name", new BsonRegularExpression(searchTerm, "i")));
+            }
+
+            // TODO: Add categoryId to ProductItem entity
+             
+            //if (!string.IsNullOrEmpty(categoryId))
+            //{
+            //    filters.Add(Builders<ProductItem>.Filter.Eq("CategoryId", categoryId));
+            //}
+
+            var filter = filters.Count > 0
+                ? Builders<ProductItem>.Filter.And(filters)
+                : FilterDefinition<ProductItem>.Empty;
+
+            return _catalogCollection.Find(filter).AsExecutable();
         }
 
         public async Task CreateProduct(ProductInput productInput, IFile productImage)

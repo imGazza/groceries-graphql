@@ -3,7 +3,7 @@ using API.Services.Catalog;
 using DATA.Models;
 using HotChocolate.Authorization;
 using HotChocolate.Data;
-using HotChocolate.Types.Pagination;
+using HotChocolate.Resolvers;
 
 namespace API.Schema.Queries.Catalog
 {
@@ -13,9 +13,9 @@ namespace API.Schema.Queries.Catalog
         [Authorize]
         [UsePaging(IncludeTotalCount = true, ConnectionName = "Catalog")]
         [UseProjection]
-        public IExecutable<ProductItem> Catalog([Service] ICatalogService _catalogService)
+        public IExecutable<ProductItem> Catalog([Service] ICatalogService _catalogService, string searchTerm = null, string categoryId = null)
         {
-            return _catalogService.GetCatalog();
+            return _catalogService.GetCatalog(searchTerm, categoryId);
         }
 
         public async Task<List<CategoryOutput>> Categories([Service] ICatalogService _catalogService)

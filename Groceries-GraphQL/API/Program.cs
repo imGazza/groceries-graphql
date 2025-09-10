@@ -3,7 +3,10 @@ using API.Extensions;
 using API.Schema.Mutations;
 using API.Schema.Queries;
 using API.Schema.Queries.Catalog;
+using HotChocolate.Data.Filters;
+using HotChocolate.Data.Filters.Expressions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
