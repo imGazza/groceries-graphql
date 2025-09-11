@@ -3,8 +3,11 @@ using API.Extensions;
 using API.Schema.Mutations;
 using API.Schema.Queries;
 using API.Schema.Queries.Catalog;
+using API.Test;
+using HotChocolate.Data;
 using HotChocolate.Data.Filters;
 using HotChocolate.Data.Filters.Expressions;
+using HotChocolate.Data.MongoDb.Filters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -45,6 +48,7 @@ builder.Services
     .AddQueryType<Query>()
     .AddMongoDbPagingProviders()
     .AddMongoDbProjections()
+    .AddCustomMongoDbFiltering()
     .AddMutationType<Mutation>()
     .AddTypes()
     .AddType<UploadType>()

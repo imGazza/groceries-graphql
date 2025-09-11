@@ -23,25 +23,27 @@ namespace API.Services.Catalog
 
         public IExecutable<ProductItem> GetCatalog(string searchTerm, string categoryId)
         {
-            var filters = new List<FilterDefinition<ProductItem>>();
+            //var filters = new List<FilterDefinition<ProductItem>>();
 
-            if (!string.IsNullOrEmpty(searchTerm))
-            {
-                filters.Add(Builders<ProductItem>.Filter.Regex("Name", new BsonRegularExpression(searchTerm, "i")));
-            }
-
-            // TODO: Add categoryId to ProductItem entity
-             
-            //if (!string.IsNullOrEmpty(categoryId))
+            //if (!string.IsNullOrEmpty(searchTerm))
             //{
-            //    filters.Add(Builders<ProductItem>.Filter.Eq("CategoryId", categoryId));
+            //    filters.Add(Builders<ProductItem>.Filter.Regex("Name", new BsonRegularExpression(searchTerm, "i")));
             //}
 
-            var filter = filters.Count > 0
-                ? Builders<ProductItem>.Filter.And(filters)
-                : FilterDefinition<ProductItem>.Empty;
+            //// TODO: Add categoryId to ProductItem entity
 
-            return _catalogCollection.Find(filter).AsExecutable();
+            ////if (!string.IsNullOrEmpty(categoryId))
+            ////{
+            ////    filters.Add(Builders<ProductItem>.Filter.Eq("CategoryId", categoryId));
+            ////}
+
+            //var filter = filters.Count > 0
+            //    ? Builders<ProductItem>.Filter.And(filters)
+            //    : FilterDefinition<ProductItem>.Empty;
+
+            //return _catalogCollection.Find(filter).AsExecutable();
+
+            return _catalogCollection.AsExecutable();
         }
 
         public async Task CreateProduct(ProductInput productInput, IFile productImage)
