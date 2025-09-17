@@ -7,6 +7,7 @@ namespace DATA.Models
         public string Name { get; set; }
         public string MeasurementUnit { get; set; }
         public int MeasurementQuantity { get; set; }
+        public string CategoryId { get; set; }
         public decimal Price { get; set; }
         public ProductImage Image { get; set; }
     }

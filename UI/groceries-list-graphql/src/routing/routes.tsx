@@ -38,6 +38,10 @@ export const router = createBrowserRouter([
 				Component: ProductsLayout
 			},
 			{
+				path: '/products/:categoryId',
+				Component: ProductsLayout
+			},
+			{
 				path: '/about',
 				Component: AboutLayout
 			}

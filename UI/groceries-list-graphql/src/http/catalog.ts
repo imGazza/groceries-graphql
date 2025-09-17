@@ -1,21 +1,11 @@
 import { gql, type TypedDocumentNode } from "@apollo/client";
 
-// Create custom hook:
-// A function that takes the searchTerm and returns capitalSearch, lowerSearch, upperSearch if searchTerm is passed
-// A function to handle presence or not of categoryId
-// Exposing a function that makes the call to BE
-// Create the debounced call in search-section.tsx
-
-export const GET_CATALOG: TypedDocumentNode<CatalogDataOutput, CatalogDataInput> = gql`
-  query GetCatalog($first: Int!, $search: String){
+export const GET_FILTERED_CATALOG = (filters: string): TypedDocumentNode<CatalogDataOutput, CatalogDataInput> => {
+  return gql`
+  query GetCatalog($first: Int!){
     catalog(
       first: $first,       
-      where: 
-      { 
-        name: {
-          contains: $search
-        }
-      }
+      ${filters}
     )
     {
       page {
@@ -38,7 +28,8 @@ export const GET_CATALOG: TypedDocumentNode<CatalogDataOutput, CatalogDataInput>
       totalCount
     }
   }
-`;
+`
+}
 
 export interface CatalogDataOutput {
   catalog: CatalogPage;
@@ -60,8 +51,6 @@ export interface CatalogPageInfo {
 
 export interface CatalogDataInput {
   first: number;
-  categoryId: string;
-  search: string;
 }
 
 export interface Product{
@@ -69,6 +58,7 @@ export interface Product{
     name: string,
     measurementUnit: string,
     measurementQuantity: number,
+    categoryId: string,
     price: number,
     image: {
       data: Array<number>

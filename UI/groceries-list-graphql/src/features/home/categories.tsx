@@ -21,7 +21,7 @@ const Categories = () => {
 			</CardHeader>
 			{
 				data?.categories.map(category => (
-					<CategoriesItem key={category.name} Icon={getCategoryIcon(category.iconName)} name={category.name} />
+					<CategoriesItem key={category.name} category={category} />
 				))
 			}
 		</Card>

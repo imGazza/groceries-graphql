@@ -23,26 +23,6 @@ namespace API.Services.Catalog
 
         public IExecutable<ProductItem> GetCatalog(string searchTerm, string categoryId)
         {
-            //var filters = new List<FilterDefinition<ProductItem>>();
-
-            //if (!string.IsNullOrEmpty(searchTerm))
-            //{
-            //    filters.Add(Builders<ProductItem>.Filter.Regex("Name", new BsonRegularExpression(searchTerm, "i")));
-            //}
-
-            //// TODO: Add categoryId to ProductItem entity
-
-            ////if (!string.IsNullOrEmpty(categoryId))
-            ////{
-            ////    filters.Add(Builders<ProductItem>.Filter.Eq("CategoryId", categoryId));
-            ////}
-
-            //var filter = filters.Count > 0
-            //    ? Builders<ProductItem>.Filter.And(filters)
-            //    : FilterDefinition<ProductItem>.Empty;
-
-            //return _catalogCollection.Find(filter).AsExecutable();
-
             return _catalogCollection.AsExecutable();
         }
 
@@ -53,6 +33,7 @@ namespace API.Services.Catalog
                 Name = productInput.Name,
                 MeasurementUnit = productInput.MeasurementUnit,
                 MeasurementQuantity = productInput.MeasurementQuantity,
+                CategoryId = productInput.CategoryId,
                 Price = productInput.Price,
                 Image = await ImageManipulation.GenerateProductImage(productImage)
             };

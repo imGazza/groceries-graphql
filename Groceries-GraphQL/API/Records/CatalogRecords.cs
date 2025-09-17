@@ -1,13 +1,11 @@
 ﻿using API.Projections;
 using DATA.Models;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
 
 namespace API.Records
 {
     #region Input Records
 
-    public record ProductInput(string Name, string MeasurementUnit, int MeasurementQuantity, decimal Price);
+    public record ProductInput(string Name, string MeasurementUnit, string CategoryId, int MeasurementQuantity, decimal Price);
     public record CategoryInput(string Name, string IconName);
 
     #endregion
