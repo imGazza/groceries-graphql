@@ -15,15 +15,20 @@ auth:bearer {
 }
 
 body:graphql {
-  {
-    catalog {
-      name
-      measurementUnit
-      measurementQuantity
-      price
-      image {
-        width,
-        height
+  query Catalog {
+    catalog(
+      order: [{ createdAt: DESC }]
+      first: 10
+      where: { name: { contains: "" } }
+    ) {
+      totalCount
+      nodes {
+        id
+        name
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
       }
     }
   }

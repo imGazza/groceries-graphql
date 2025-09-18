@@ -31,6 +31,35 @@ export const GET_FILTERED_CATALOG = (filters: string): TypedDocumentNode<Catalog
 `
 }
 
+export const GET_LATEST_PRODUCTS: TypedDocumentNode<CatalogDataOutput, CatalogDataInput> = gql`
+  query GetCatalog{
+    catalog(
+      first: 6,       
+      order: [{ createdAt: DESC }]
+    )
+    {
+      page {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage,
+        pageCount
+      }
+      nodes {
+        id
+        name
+        measurementUnit
+        measurementQuantity
+        price
+        image {
+          data
+        }
+      }    
+      totalCount
+    }
+  }
+`
+
 export interface CatalogDataOutput {
   catalog: CatalogPage;
 }

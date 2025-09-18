@@ -12,6 +12,7 @@ namespace API.Schema.Queries.Catalog
     {
         [UsePaging(IncludeTotalCount = true, ConnectionName = "Catalog")]        
         [UseProjection]
+        [UseSorting]
         [UseFiltering]
         public IExecutable<ProductItem> Catalog([Service] ICatalogService _catalogService, string searchTerm = null, string categoryId = null)
         {

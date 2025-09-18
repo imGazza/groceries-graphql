@@ -48,6 +48,7 @@ builder.Services
     .AddQueryType<Query>()
     .AddMongoDbPagingProviders()
     .AddMongoDbProjections()
+    .AddMongoDbSorting()
     .AddCustomMongoDbFiltering()
     .AddMutationType<Mutation>()
     .AddTypes()

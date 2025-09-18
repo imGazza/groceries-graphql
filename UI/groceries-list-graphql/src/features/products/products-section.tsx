@@ -16,7 +16,7 @@ const ProductsSection = () => {
 
 
 	return (
-		<div className="min-h-[600px]">
+		<div className="min-h-[800px]">
 			<ProductsDisplay products={catalogData?.catalog.nodes!} skeletonLoadingQty={18} />
 		</div>
 	)
