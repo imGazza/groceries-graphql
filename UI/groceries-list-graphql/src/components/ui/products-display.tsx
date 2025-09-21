@@ -2,16 +2,17 @@ import type { Product } from "@/http/catalog";
 import ProductCard, { ProductCardSkeleton } from "./product-card";
 import useDraftList from "@/hooks/use-draft-list";
 import { getQuantityOfProductInCart } from "@/lib/draft-list-utils";
-import { skeletonUniqueId } from "@/lib/utils";
+import { cn, skeletonUniqueId } from "@/lib/utils";
 import { useMutation } from "@apollo/client";
 import { ADD_ITEM, INCREASE_QUANTITY, DECREASE_QUANTITY, REMOVE_ITEM } from "@/http/grocery-list";
 
 interface ProductsDisplayProps {
 	products: Product[];
 	skeletonLoadingQty: number;
+	className?: string;
 }
 
-const ProductsDisplay = ({ products, skeletonLoadingQty = 6 }: ProductsDisplayProps) => {
+const ProductsDisplay = ({ products, className = '', skeletonLoadingQty = 6 }: ProductsDisplayProps) => {
 
 	const { groceryList, setGroceryList } = useDraftList();
 	const [addItem] = useMutation(ADD_ITEM);
@@ -56,11 +57,11 @@ const ProductsDisplay = ({ products, skeletonLoadingQty = 6 }: ProductsDisplayPr
 	}
 
 	if (!groceryList || !products) {
-		return <ProductDisplaySkeleton skeletonLoadingQty={skeletonLoadingQty} />
+		return <ProductDisplaySkeleton skeletonLoadingQty={skeletonLoadingQty} className={className} />
 	}
 
 	return (
-		<div className="grid grid-cols-6 gap-4 py-4">
+		<div className={cn("grid grid-cols-6 gap-4 py-4", className)}>
 			{
 				products?.map(product => (
 					<ProductCard 
@@ -81,11 +82,12 @@ export default ProductsDisplay;
 
 interface ProductDisplaySkeletonProps {
 	skeletonLoadingQty: number;
+	className?: string;
 }
 
-const ProductDisplaySkeleton = ({ skeletonLoadingQty }: ProductDisplaySkeletonProps) => {
+const ProductDisplaySkeleton = ({ skeletonLoadingQty, className = '' }: ProductDisplaySkeletonProps) => {
 	return (
-		<div className="grid grid-cols-6 gap-4 py-4">
+		<div className={cn("grid grid-cols-6 gap-4 py-4", className)}>
 			{
 				Array.from({ length: skeletonLoadingQty }).map(() => (
 					<ProductCardSkeleton key={skeletonUniqueId()} />

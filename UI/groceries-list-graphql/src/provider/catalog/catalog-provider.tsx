@@ -2,6 +2,7 @@ import { GET_FILTERED_CATALOG } from "@/http/catalog";
 import { useQuery } from "@apollo/client";
 import { useMemo, useState } from "react";
 import { CatalogContext } from "./catalog-context";
+import { buildFilters } from "./common";
 
 interface CatalogProviderProps {
 	children: React.ReactNode;
@@ -19,17 +20,9 @@ const CatalogProvider = ({ children, initialFirst }: CatalogProviderProps) => {
 		return {
 			first: first
 		};
-	}, [first, searchTerm, categoryId]);
+	}, [first, searchTerm, categoryId]);	
 
-	//Dynamic building of filters for the query
-	const buildFilters = () => {
-		const filters = [];
-		searchTerm && filters.push(`{ name: { contains: "${searchTerm}"}}`);		
-		categoryId &&	filters.push(`{ categoryId: { eq: "${categoryId}"}}`);
-		return `where: { and: [${filters.join(', ')}] }`;
-	}	
-
-	const { data: catalogData, loading } = useQuery(GET_FILTERED_CATALOG(buildFilters()), { variables });
+	const { data: catalogData, loading } = useQuery(GET_FILTERED_CATALOG(buildFilters(searchTerm, categoryId)), { variables });
 
 	const setSearchTermQuery = (term: string) => {
 		setSearchTerm(term);

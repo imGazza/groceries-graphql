@@ -17,7 +17,7 @@ const AboutLayout = () => {
 
 	return (
 		<div className="container-wrapper p-10">
-			<div className="container flex flex-col items-center justify-center gap-5 text-center">
+			<div className="container flex flex-col items-center gap-5 text-center min-h-[calc(100vh-0.25rem*100)]">
 				<div className="flex items-center">
 					<H1>About</H1>
 					<Logo className="text-4xl ml-3" />
@@ -25,11 +25,11 @@ const AboutLayout = () => {
 				</div>
 
 				<p className="text-lg text-balance tracking-tight max-w-3xl">
-					A simple demo app built to explore GraphQL. featuring a .NET backend powered by HotChocolate and a MongoDB-based data layer.
+					A simple demo app built to explore GraphQL, featuring a .NET backend powered by HotChocolate and a MongoDB-based data layer.
 				</p>
 
 				<div className="flex items-center">
-					<img alt="groceries" className="rounded-md h-full object-cover object-bottom w-[450px]" src="/groceries-uncut.jpg" />
+					<img alt="groceries" className="rounded-md h-full object-cover object-bottom w-[750px]" src="/groceries-uncut.jpg" />
 				</div>
 
 				<div className="flex items-center gap-3">
