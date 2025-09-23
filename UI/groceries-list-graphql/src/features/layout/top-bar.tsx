@@ -1,11 +1,11 @@
 import { Badge } from "@/components/ui/badge"
+import Cart from "@/components/ui/cart"
 import IconButton from "@/components/ui/icon-button"
 import Logo from "@/components/ui/logo"
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, navigationMenuTriggerStyle } from "@/components/ui/navigation-menu"
 import TopbarSearchBar from "@/components/ui/topbar-searchbar"
 import useActiveSection from "@/hooks/use-active-section"
 import useDraftList from "@/hooks/use-draft-list"
-import CatalogProvider from "@/provider/catalog/catalog-provider"
 import SearchProvider from "@/provider/catalog/search-provider"
 import { ShoppingBasket, User } from "lucide-react"
 import { Link } from "react-router"
@@ -14,7 +14,6 @@ import { Link } from "react-router"
 const TopBar = () => {
 
 	const { activeSection } = useActiveSection();
-	const { groceryList } = useDraftList();
 
 	const menuItems = [
 		{ id: 'home', value: 'Home', url: '/' },
@@ -48,18 +47,7 @@ const TopBar = () => {
 						<IconButton >
 							<User />
 						</IconButton>
-						<IconButton className="relative">
-							{
-								(groceryList?.items?.length ?? 0) > 0 &&
-								<Badge
-									className="absolute -top-1 -right-1 px-1 min-w-4 h-4 flex items-center font-mono justify-center text-[10px] rounded-full"
-									variant="destructive"
-								>
-									{groceryList?.items.length}
-								</Badge>
-							}
-							<ShoppingBasket />
-						</IconButton>
+						<Cart />
 					</SearchProvider>
 				</div>
 			</div>

@@ -4,12 +4,29 @@ import useDraftList from "@/hooks/use-draft-list";
 import { getQuantityOfProductInCart } from "@/lib/draft-list-utils";
 import { cn, skeletonUniqueId } from "@/lib/utils";
 import { useMutation } from "@apollo/client";
-import { ADD_ITEM, INCREASE_QUANTITY, DECREASE_QUANTITY, REMOVE_ITEM } from "@/http/grocery-list";
+import { ADD_ITEM, INCREASE_QUANTITY, DECREASE_QUANTITY, REMOVE_ITEM, type GroceryList } from "@/http/grocery-list";
 
 interface ProductsDisplayProps {
 	products: Product[];
 	skeletonLoadingQty: number;
 	className?: string;
+}
+
+const mapToItemData = (groceryList: GroceryList | null, product: Product, quantity: number) => {
+		return {
+			groceryItem: mapToGroceryItem(product, quantity),
+			groceryListId: groceryList?.id
+		}
+	}
+
+const mapToGroceryItem = (product: Product, quantity: number) => {
+	return {
+		productItemId: product.id,
+		productItemName: product.name,
+		quantity: quantity,
+		unitPrice: product.price,
+		image: product.image.data
+	}
 }
 
 const ProductsDisplay = ({ products, className = '', skeletonLoadingQty = 6 }: ProductsDisplayProps) => {
@@ -18,41 +35,25 @@ const ProductsDisplay = ({ products, className = '', skeletonLoadingQty = 6 }: P
 	const [addItem] = useMutation(ADD_ITEM);
 	const [increaseQuantity] = useMutation(INCREASE_QUANTITY);
 	const [decreaseQuantity] = useMutation(DECREASE_QUANTITY);
-	const [removeItem] = useMutation(REMOVE_ITEM);
-
-	const mapToItemData = (product: Product, quantity: number) => {
-		return {
-			groceryItem: mapToProductItem(product, quantity),
-			groceryListId: groceryList?.id
-		}
-	}
-
-	const mapToProductItem = (product: Product, quantity: number) => {
-		return  {
-			productItemId: product.id,
-				productItemName: product.name,
-				quantity: quantity,
-				unitPrice: product.price
-		}
-	}
+	const [removeItem] = useMutation(REMOVE_ITEM);	
 
 	const addItemToList = async (product: Product, quantity: number) => {
-		await addItem({ variables: mapToItemData(product, 1) });
-		setGroceryList({ ...groceryList!, items: [...groceryList!.items, mapToProductItem(product, quantity) ]});
+		await addItem({ variables: mapToItemData(groceryList, product, 1) });
+		setGroceryList({ ...groceryList!, items: [...groceryList!.items, mapToGroceryItem(product, quantity)] });
 	}
 
 	const increaseItemQuantity = async (product: Product, quantity: number) => {
-		await increaseQuantity({ variables: mapToItemData(product, quantity) })
-		setGroceryList({ ...groceryList!, items: groceryList!.items.map(i => i.productItemId === product.id ? { ...i, quantity: quantity } : i)});
+		await increaseQuantity({ variables: mapToItemData(groceryList, product, quantity) })
+		setGroceryList({ ...groceryList!, items: groceryList!.items.map(i => i.productItemId === product.id ? { ...i, quantity: quantity } : i) });
 	}
 
 	const decreaseItemQuantity = async (product: Product, quantity: number) => {
-		await decreaseQuantity({ variables: mapToItemData(product, quantity) })
-		setGroceryList({ ...groceryList!, items: groceryList!.items.map(i => i.productItemId === product.id ? { ...i, quantity: quantity } : i)});
+		await decreaseQuantity({ variables: mapToItemData(groceryList, product, quantity) })
+		setGroceryList({ ...groceryList!, items: groceryList!.items.map(i => i.productItemId === product.id ? { ...i, quantity: quantity } : i) });
 	}
 
 	const removeItemFromList = async (product: Product) => {
-		await removeItem({ variables: mapToItemData(product, 0) });
+		await removeItem({ variables: mapToItemData(groceryList, product, 0) });
 		setGroceryList({ ...groceryList!, items: groceryList!.items.filter(i => i.productItemId !== product.id) });
 	}
 
@@ -64,10 +65,10 @@ const ProductsDisplay = ({ products, className = '', skeletonLoadingQty = 6 }: P
 		<div className={cn("grid grid-cols-6 gap-4 py-4", className)}>
 			{
 				products?.map(product => (
-					<ProductCard 
-						key={product.id} 
-						product={product} 
-						initialQuantity={getQuantityOfProductInCart(product, groceryList)} 
+					<ProductCard
+						key={product.id}
+						product={product}
+						initialQuantity={getQuantityOfProductInCart(product, groceryList)}
 						addItem={addItemToList}
 						increseQuantity={increaseItemQuantity}
 						decreaseQuantity={decreaseItemQuantity}

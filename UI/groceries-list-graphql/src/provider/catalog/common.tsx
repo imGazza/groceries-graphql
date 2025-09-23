@@ -6,4 +6,4 @@ export const buildFilters = (searchTerm: string = '', categoryId: string  = '') 
 	return `where: { and: [${filters.join(', ')}] }`;
 }	
 
-export const searchInitialFirst: number = 4;
+export const searchInitialFirst: number = 10;

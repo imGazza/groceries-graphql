@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import H1 from "@/components/ui/h1";
+import { Link } from "react-router";
 
 const HomeBanner = () => {
 	return (
@@ -9,7 +10,7 @@ const HomeBanner = () => {
 				<div className="absolute p-10 max-w-[60%] flex flex-col gap-4">
 					<H1>Check out all the products</H1>
 					<p className="text-left text-lg text-balance tracking-tight">Build your custom grocery lists and track all your purchases</p>
-					<Button variant="custom" className="w-[50%]">View Products</Button>
+					<Link className="text-left" to="/products"><Button variant="custom" className="w-[50%]">View Products</Button></Link>
 				</div>
 				<img alt="groceries" className="h-full object-cover object-bottom w-full" src="/groceries.png" />
 			</div>

@@ -1,19 +1,23 @@
 import ProductsDisplay from "@/components/ui/products-display";
 import useCatalog from "@/hooks/use-catalog";
 import { useEffect } from "react";
-import { useParams } from "react-router";
+import {  useSearchParams } from "react-router";
 
 const ProductsSection = () => {
 
-	const { catalogData, setCategoryQuery } = useCatalog();
-	const { categoryId } = useParams();
+	const { catalogData, setCategoryQuery, setSearchTermQuery } = useCatalog();
+	const [ searchParams ] = useSearchParams();
 
 	useEffect(() => {
+		const categoryId = searchParams.get('categoryId');
+		const searchTerm = searchParams.get('search');
 		if (categoryId) {
 			setCategoryQuery(categoryId)
 		}
-	}, [categoryId, setCategoryQuery])
-
+		if(searchTerm){
+			setSearchTermQuery(searchTerm);
+		}
+	}, [searchParams, setCategoryQuery])
 
 	return (
 		<div className="min-h-[800px]">

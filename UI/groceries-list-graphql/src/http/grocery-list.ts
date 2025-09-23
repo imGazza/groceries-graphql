@@ -80,5 +80,6 @@ export interface GroceryItem {
 	productItemId: string,
 	productItemName: string,
 	quantity: number,
-	unitPrice: number
+	unitPrice: number,
+	image: Array<number>
 }

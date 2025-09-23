@@ -17,6 +17,7 @@ namespace DATA.Models
         public string ProductItemName { get; set; }
         public int Quantity { get; set; }
         public decimal UnitPrice { get; set; }
+        public byte[] Image { get; set; }
     }
 
     public enum GroceryListStatus
