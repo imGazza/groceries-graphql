@@ -2,15 +2,15 @@ import type { Product } from "@/http/catalog";
 import { Card, CardDescription, CardTitle } from "./card";
 import { Minus, Plus, ShoppingCart } from "lucide-react";
 import IconButton from "./icon-button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ConfirmDialog from "./confirm-dialog";
 import { Skeleton } from "./skeleton";
 
 interface ProductCardProps {
 	product: Product;
 	initialQuantity: number;
-	addItem: (product: Product, quantity: number) => void;
-	increseQuantity: 	(product: Product, quantity: number) => void;
+	addItem: (product: Product) => void;
+	increseQuantity: (product: Product, quantity: number) => void;
 	decreaseQuantity: (product: Product, quantity: number) => void;
 	removeItem: (product: Product, quantity: number) => void;
 }
@@ -18,32 +18,36 @@ interface ProductCardProps {
 const ProductCard = ({ product, initialQuantity, addItem, increseQuantity, decreaseQuantity, removeItem }: ProductCardProps) => {
 
 	const [quantity, setQuantity] = useState(initialQuantity);
-	const [openConfirmDialog, setOpenConfirmDialog] = useState(false);	
+	const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
 
-  const uint8Array = new Uint8Array(product.image.data);
-  const imageUrl = URL.createObjectURL(new Blob([uint8Array], { type: 'image/jpeg' }));
+	useEffect(() => {
+		setQuantity(initialQuantity);
+	}, [initialQuantity]);
+
+	const uint8Array = new Uint8Array(product.image.data);
+	const imageUrl = URL.createObjectURL(new Blob([uint8Array], { type: 'image/jpeg' }));
 
 	const currencyPrice = (price: number) => new Intl.NumberFormat('en-US', {
 		style: 'currency',
 		currency: 'EUR'
-	}).format(price);	
+	}).format(price);
 
 	const addItemToList = () => {
-		if(quantity !== 0) return;
+		if (quantity !== 0) return;
 
-		addItem(product, quantity);
+		addItem(product);
 		setQuantity(1);
 	}
 
 	const increaseItemQuantity = (quantity: number) => {
-		if(quantity === 1) return;
+		if (quantity === 1) return;
 
 		increseQuantity(product, quantity);
 		setQuantity(quantity);
 	}
 
 	const decreaseItemQuantity = (quantity: number) => {
-		if(quantity === 0){
+		if (quantity === 0) {
 			setOpenConfirmDialog(true);
 			return;
 		}
@@ -57,7 +61,7 @@ const ProductCard = ({ product, initialQuantity, addItem, increseQuantity, decre
 		setQuantity(0);
 	}
 
-	if(!product){
+	if (!product) {
 		return <ProductCardSkeleton />
 	}
 
@@ -75,17 +79,17 @@ const ProductCard = ({ product, initialQuantity, addItem, increseQuantity, decre
 					{product.measurementQuantity} {product.measurementUnit}
 				</CardDescription>
 			</div>
-			
-			{quantity === 0 ? 
+
+			{quantity === 0 ?
 				(<div className="flex justify-end px-3">
 					<IconButton className="bg-custom text-secondary hover:bg-custom/80" onClick={() => addItemToList()}>
 						<ShoppingCart className="w-4 h-4" />
 					</IconButton>
 				</div>)
-				:	
+				:
 				(<div className="flex justify-between px-3 items-center">
-					<IconButton 
-						className="bg-custom text-secondary hover:bg-custom/80" 
+					<IconButton
+						className="bg-custom text-secondary hover:bg-custom/80"
 						onClick={() => decreaseItemQuantity(quantity - 1)}>
 						<Minus className="w-4 h-4" />
 					</IconButton>
@@ -96,7 +100,7 @@ const ProductCard = ({ product, initialQuantity, addItem, increseQuantity, decre
 				</div>)
 			}
 
-			<ConfirmDialog onConfirm={removeItemFromList} open={openConfirmDialog} onOpenChange={(open: boolean) => setOpenConfirmDialog(open)} message="Are you sure you want to remove this item from your cart?"/>
+			<ConfirmDialog onConfirm={removeItemFromList} open={openConfirmDialog} onOpenChange={(open: boolean) => setOpenConfirmDialog(open)} message="Are you sure you want to remove this item from your cart?" />
 		</Card>
 	)
 }
@@ -111,7 +115,7 @@ const ProductCardSkeleton = () => {
 				<Skeleton className="h-4 w-full mb-1" />
 				<Skeleton className="h-3 w-20" />
 			</div>
-			
+
 			<div className="flex justify-end px-3">
 				<Skeleton className="h-8 w-8 rounded-md" />
 			</div>

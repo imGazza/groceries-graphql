@@ -1,4 +1,4 @@
-import { GET_DRAFT_LIST, type GroceryList } from "@/http/grocery-list";
+import { GET_DRAFT_LIST, type GroceryItem, type GroceryList } from "@/http/grocery-list";
 import { useEffect, useMemo, useState } from "react";
 import { DraftListContext } from "./draft-list-context";
 import { useQuery } from "@apollo/client";
@@ -18,13 +18,44 @@ const DraftListProvider = ({ children }: DraftListProviderProps) => {
 		setDraftList(initialDraftList?.userDraftGroceryList ?? null);
 	}, [initialDraftList])
 
+	const addGroceryItem = (groceryItem: GroceryItem) => {
+		setDraftList((draftList) => { 
+			return {
+				...draftList!,
+				totalPrice: draftList!.totalPrice + groceryItem.unitPrice,
+				items: [...draftList!.items, groceryItem]
+			}
+		})
+	}
+
+	const changeItemQuantity = (groceryItem: GroceryItem, quantity: number) => {
+		setDraftList((draftList) => {
+			return {
+				...draftList!,
+				totalPrice: draftList!.totalPrice + (groceryItem.unitPrice * (quantity - groceryItem.quantity)),
+				items: draftList!.items.map(i => i.productItemId === groceryItem.productItemId ? { ...i, quantity: quantity } : i)
+			}
+		})
+	}
+
+	const removeGroceryItem = (groceryItem: GroceryItem) => {
+		setDraftList((draftList) => {
+			return { 
+				...draftList!, 
+				totalPrice: draftList!.totalPrice - groceryItem.unitPrice,
+				items: draftList!.items.filter(i => i.productItemId !== groceryItem.productItemId) }
+		})
+	}
+
 	const value = useMemo(
 		() => {
 			return {
 				groceryList: draftList,
-				setGroceryList: setDraftList
+				addGroceryItem: addGroceryItem,
+				changeItemQuantity: changeItemQuantity,
+				removeGroceryItem: removeGroceryItem,
 			}
-		}, [draftList]
+		}, [draftList, addGroceryItem, changeItemQuantity, removeGroceryItem]
 	)
 
 	return (

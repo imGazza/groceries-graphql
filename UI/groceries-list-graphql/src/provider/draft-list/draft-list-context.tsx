@@ -1,10 +1,14 @@
-import type { GroceryList } from "@/http/grocery-list";
+import type { GroceryItem, GroceryList } from "@/http/grocery-list";
 import { createContext } from "react";
 
 export const DraftListContext = createContext<{
 	groceryList: GroceryList | null,
-	setGroceryList: (groceryList: GroceryList) => void
+	addGroceryItem: (groceryItem: GroceryItem) => void,
+	changeItemQuantity: (groceryItem: GroceryItem, quantity: number) => void,
+	removeGroceryItem: (groceryItem: GroceryItem) => void,
 }>({
 	groceryList: null,
-	setGroceryList: () => {}
+	addGroceryItem: () => {},
+	changeItemQuantity: () => {},
+	removeGroceryItem: () => {},
 });

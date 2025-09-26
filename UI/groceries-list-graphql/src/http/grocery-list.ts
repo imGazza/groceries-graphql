@@ -13,6 +13,7 @@ export const GET_DRAFT_LIST: TypedDocumentNode<UserDraftGroceryListOutput, strin
 				productItemName,
 				quantity,
 				unitPrice,
+				image
 			}
 		}
 	}	
@@ -49,11 +50,7 @@ export const REMOVE_ITEM: TypedDocumentNode<ItemData, {}> = gql`
   mutation RemoveGroceryItem($groceryItem: GroceryItemInput!, $groceryListId: String) {
 		removeItem(item: $groceryItem, groceryListId: $groceryListId){
 			id,
-			userId,
-			totalPrice,
-			items {
-				productItemId
-			}
+			userId	
 		}
 	}
 `;

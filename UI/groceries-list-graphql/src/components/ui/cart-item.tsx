@@ -3,14 +3,14 @@ import { Card, CardDescription, CardTitle } from "./card";
 import IconButton from "./icon-button";
 import ConfirmDialog from "./confirm-dialog";
 import { Minus, Plus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface CartItemProps {
 	item: GroceryItem;
 	initialQuantity: number;
-	increseQuantity: 	(item: GroceryItem, quantity: number) => void;
+	increseQuantity: (item: GroceryItem, quantity: number) => void;
 	decreaseQuantity: (item: GroceryItem, quantity: number) => void;
-	removeItem: (item: GroceryItem, quantity: number) => void;
+	removeItem: (item: GroceryItem) => void;
 }
 
 const CartItem = ({ item, initialQuantity, increseQuantity, decreaseQuantity, removeItem }: CartItemProps) => {
@@ -18,23 +18,27 @@ const CartItem = ({ item, initialQuantity, increseQuantity, decreaseQuantity, re
 	const [quantity, setQuantity] = useState(initialQuantity);
 	const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
 
+	useEffect(() => {
+		setQuantity(initialQuantity);
+	}, [initialQuantity]);
+
 	const uint8Array = new Uint8Array(item.image);
 	const imageUrl = URL.createObjectURL(new Blob([uint8Array], { type: 'image/jpeg' }));
 
 	const currencyPrice = (price: number) => new Intl.NumberFormat('en-US', {
 		style: 'currency',
 		currency: 'EUR'
-	}).format(price);	
+	}).format(price);
 
 	const increaseItemQuantity = (quantity: number) => {
-		if(quantity === 1) return;
+		if (quantity === 1) return;
 
 		increseQuantity(item, quantity);
 		setQuantity(quantity);
 	}
 
 	const decreaseItemQuantity = (quantity: number) => {
-		if(quantity === 0){
+		if (quantity === 0) {
 			setOpenConfirmDialog(true);
 			return;
 		}
@@ -44,26 +48,26 @@ const CartItem = ({ item, initialQuantity, increseQuantity, decreaseQuantity, re
 	}
 
 	const removeItemFromList = () => {
-		removeItem(item, quantity);
+		removeItem(item);
 		setQuantity(0);
 	}
 
 	return (
-		<div className="gap-1.5 py-3">
-			<img src={imageUrl} alt={item.productItemName} className="h-full object-cover object-bottom w-full" />
-			<div className="p-3">
-				<CardTitle className="text-left font-normal text-md text-card-foreground/65">
-					{currencyPrice(item.unitPrice)}
-				</CardTitle>
-				<CardDescription className="text-left text-sm font-semibold text-card-foreground/85">
-					{item.productItemName}
-				</CardDescription>
-				<CardDescription className="text-left text-[0.625rem] font-semibold text-card-foreground/65">
-					{item.quantity}
-				</CardDescription>
+		<div className="flex items-center justify-between px-3">
+			<div className="flex items-center">
+				<img src={imageUrl} alt={item.productItemName} className="max-h-15" />
+				<div className="p-3">
+					<CardTitle className="text-left font-normal text-md text-card-foreground/65">
+						{currencyPrice(item.unitPrice)}
+					</CardTitle>
+					<CardDescription className="text-left text-sm font-semibold text-card-foreground/85">
+						{item.productItemName}
+					</CardDescription>
+				</div>
 			</div>
 
-			<div className="flex justify-between px-3 items-center">
+
+			<div className="flex justify-between px-3 items-center gap-3">
 				<IconButton
 					className="bg-custom text-secondary hover:bg-custom/80"
 					onClick={() => decreaseItemQuantity(quantity - 1)}>

@@ -5,6 +5,7 @@ import { getQuantityOfProductInCart } from "@/lib/draft-list-utils";
 import { cn, skeletonUniqueId } from "@/lib/utils";
 import { useMutation } from "@apollo/client";
 import { ADD_ITEM, INCREASE_QUANTITY, DECREASE_QUANTITY, REMOVE_ITEM, type GroceryList } from "@/http/grocery-list";
+import { useEffect } from "react";
 
 interface ProductsDisplayProps {
 	products: Product[];
@@ -31,30 +32,30 @@ const mapToGroceryItem = (product: Product, quantity: number) => {
 
 const ProductsDisplay = ({ products, className = '', skeletonLoadingQty = 6 }: ProductsDisplayProps) => {
 
-	const { groceryList, setGroceryList } = useDraftList();
+	const { groceryList, addGroceryItem, changeItemQuantity, removeGroceryItem } = useDraftList();
 	const [addItem] = useMutation(ADD_ITEM);
 	const [increaseQuantity] = useMutation(INCREASE_QUANTITY);
 	const [decreaseQuantity] = useMutation(DECREASE_QUANTITY);
-	const [removeItem] = useMutation(REMOVE_ITEM);	
+	const [removeItem] = useMutation(REMOVE_ITEM);
 
-	const addItemToList = async (product: Product, quantity: number) => {
+	const addItemToList = async (product: Product) => {
 		await addItem({ variables: mapToItemData(groceryList, product, 1) });
-		setGroceryList({ ...groceryList!, items: [...groceryList!.items, mapToGroceryItem(product, quantity)] });
+		addGroceryItem(mapToGroceryItem(product, 1));
 	}
 
 	const increaseItemQuantity = async (product: Product, quantity: number) => {
 		await increaseQuantity({ variables: mapToItemData(groceryList, product, quantity) })
-		setGroceryList({ ...groceryList!, items: groceryList!.items.map(i => i.productItemId === product.id ? { ...i, quantity: quantity } : i) });
+		changeItemQuantity(mapToGroceryItem(product, quantity-1), quantity);
 	}
 
 	const decreaseItemQuantity = async (product: Product, quantity: number) => {
 		await decreaseQuantity({ variables: mapToItemData(groceryList, product, quantity) })
-		setGroceryList({ ...groceryList!, items: groceryList!.items.map(i => i.productItemId === product.id ? { ...i, quantity: quantity } : i) });
+		changeItemQuantity(mapToGroceryItem(product, quantity+1), quantity);
 	}
 
 	const removeItemFromList = async (product: Product) => {
 		await removeItem({ variables: mapToItemData(groceryList, product, 0) });
-		setGroceryList({ ...groceryList!, items: groceryList!.items.filter(i => i.productItemId !== product.id) });
+		removeGroceryItem(mapToGroceryItem(product, 0));
 	}
 
 	if (!groceryList || !products) {

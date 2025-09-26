@@ -6,19 +6,26 @@ import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHe
 import { Button } from "./button";
 import { useMutation } from "@apollo/client";
 import { DECREASE_QUANTITY, INCREASE_QUANTITY, REMOVE_ITEM, type GroceryItem, type GroceryList } from "@/http/grocery-list";
-import type { Product } from "@/http/catalog";
 import CartItem from "./cart-item";
+import { ScrollArea } from "./scroll-area";
+import { useEffect } from "react";
 
 const mapToItemData = (groceryList: GroceryList | null, item: GroceryItem, quantity: number) => {
-		return {
-			groceryItem: item,
-			groceryListId: groceryList?.id
-		}
+	return {
+		groceryItem: { 
+			productItemId: item.productItemId,
+			productItemName: item.productItemName,
+			quantity: quantity,
+			unitPrice: item.unitPrice,
+			image: item.image
+		},
+		groceryListId: groceryList?.id
 	}
+}
 
 const Cart = () => {
 
-	const { groceryList, setGroceryList } = useDraftList();
+	const { groceryList, changeItemQuantity, removeGroceryItem } = useDraftList();
 
 	const [increaseQuantity] = useMutation(INCREASE_QUANTITY);
 	const [decreaseQuantity] = useMutation(DECREASE_QUANTITY);
@@ -26,17 +33,17 @@ const Cart = () => {
 
 	const increaseItemQuantity = async (item: GroceryItem, quantity: number) => {
 		await increaseQuantity({ variables: mapToItemData(groceryList, item, quantity) });
-		setGroceryList({ ...groceryList!, items: groceryList!.items.map(i => i.productItemId === item.productItemId ? { ...i, quantity: quantity } : i) });
+		changeItemQuantity(item, quantity);
 	}
 
 	const decreaseItemQuantity = async (item: GroceryItem, quantity: number) => {
 		await decreaseQuantity({ variables: mapToItemData(groceryList, item, quantity) })
-		setGroceryList({ ...groceryList!, items: groceryList!.items.map(i => i.productItemId === item.productItemId ? { ...i, quantity: quantity } : i) });
+		changeItemQuantity(item, quantity);
 	}
 
 	const removeItemFromList = async (item: GroceryItem) => {
 		await removeItem({ variables: mapToItemData(groceryList, item, 0) });
-		setGroceryList({ ...groceryList!, items: groceryList!.items.filter(i => i.productItemId !== item.productItemId) });
+		removeGroceryItem(item);
 	}
 
 	return (
@@ -62,18 +69,24 @@ const Cart = () => {
 						You have {groceryList?.items.length === 1 ? '1 product' : `${groceryList?.items.length} products`} in your cart
 					</SheetDescription>
 				</SheetHeader>
-				{ groceryList?.items.map(item => (
-					<CartItem 
-						key={item.productItemId}
-						item={item}
-						initialQuantity={item.quantity}
-						increseQuantity={increaseItemQuantity}
-						decreaseQuantity={decreaseItemQuantity}
-						removeItem={removeItemFromList}
-					/>
-				)) }
+
+				<div className="flex-1 my-4 overflow-hidden">
+					<ScrollArea className="h-full w-full">
+						{groceryList?.items.map(item => (
+							<CartItem
+								key={item.productItemId}
+								item={item}
+								initialQuantity={item.quantity}
+								increseQuantity={increaseItemQuantity}
+								decreaseQuantity={decreaseItemQuantity}
+								removeItem={removeItemFromList}
+							/>
+						))}
+					</ScrollArea>
+				</div>
+
 				<SheetFooter>
-					<Button type="submit">Save changes</Button>
+					<Button type="submit">{groceryList?.totalPrice ? `Total: $${groceryList?.totalPrice}` : 'Save changes'}</Button>
 					<SheetClose asChild>
 						<Button variant="outline">Close</Button>
 					</SheetClose>
