@@ -55,6 +55,44 @@ export const REMOVE_ITEM: TypedDocumentNode<ItemData, {}> = gql`
 	}
 `;
 
+export const COMPLETE_LIST: TypedDocumentNode<CompleteListOutput, {}> = gql`
+  mutation CompleteList($groceryListId: String, $userId: String) {
+  	completeList(groceryListId: $groceryListId, userId: $userId){
+			id,
+			userId,
+			totalPrice,
+			status,
+			completedAt,
+			items {
+				productItemId,
+				productItemName,
+				quantity,
+				unitPrice,
+				image
+			}
+		}
+	}
+`
+
+export const USER_HISTORY_LISTS: TypedDocumentNode<UserHistoryGroceryListsOutput, string> = gql`
+	query UserHistoryGroceryLists($userId: String!){
+		userHistoryGroceryLists(userId: $userId) {
+			id,
+			userId,
+			totalPrice,
+			status,
+			completedAt,
+			items {
+				productItemId,
+				productItemName,
+				quantity,
+				unitPrice,
+				image
+			}
+		}
+	}
+`;
+
 interface UserDraftGroceryListOutput {
 	userDraftGroceryList: GroceryList;
 }
@@ -79,4 +117,12 @@ export interface GroceryItem {
 	quantity: number,
 	unitPrice: number,
 	image: Array<number>
+}
+
+export interface CompleteListOutput {
+	completeList: GroceryList
+}
+
+export interface UserHistoryGroceryListsOutput {
+	userHistoryGroceryLists: GroceryList[]
 }

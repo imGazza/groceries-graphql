@@ -47,15 +47,20 @@ const DraftListProvider = ({ children }: DraftListProviderProps) => {
 		})
 	}
 
+	const confirmGroceryList = (emptyGroceryList: GroceryList) => {
+		setDraftList(emptyGroceryList);
+	}
+
 	const value = useMemo(
 		() => {
 			return {
 				groceryList: draftList,
-				addGroceryItem: addGroceryItem,
-				changeItemQuantity: changeItemQuantity,
-				removeGroceryItem: removeGroceryItem,
+				addGroceryItem,
+				changeItemQuantity,
+				removeGroceryItem,
+				confirmGroceryList
 			}
-		}, [draftList, addGroceryItem, changeItemQuantity, removeGroceryItem]
+		}, [draftList, addGroceryItem, changeItemQuantity, removeGroceryItem, confirmGroceryList]
 	)
 
 	return (

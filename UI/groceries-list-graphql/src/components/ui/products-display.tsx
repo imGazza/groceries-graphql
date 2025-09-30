@@ -5,7 +5,6 @@ import { getQuantityOfProductInCart } from "@/lib/draft-list-utils";
 import { cn, skeletonUniqueId } from "@/lib/utils";
 import { useMutation } from "@apollo/client";
 import { ADD_ITEM, INCREASE_QUANTITY, DECREASE_QUANTITY, REMOVE_ITEM, type GroceryList } from "@/http/grocery-list";
-import { useEffect } from "react";
 
 interface ProductsDisplayProps {
 	products: Product[];

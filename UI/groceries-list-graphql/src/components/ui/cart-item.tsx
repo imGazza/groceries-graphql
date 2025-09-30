@@ -1,5 +1,5 @@
 import type { GroceryItem } from "@/http/grocery-list";
-import { Card, CardDescription, CardTitle } from "./card";
+import { CardDescription, CardTitle } from "./card";
 import IconButton from "./icon-button";
 import ConfirmDialog from "./confirm-dialog";
 import { Minus, Plus } from "lucide-react";

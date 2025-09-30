@@ -7,9 +7,10 @@ namespace API.Schema.Queries.UserGroceryList
     [ExtendObjectType("Query")]
     public class UserGroceryListQueries
     {
-        public async Task<List<GroceryListOutput>> UserGroceryLists(string userId, [Service] IUserGroceryListService _userGroceryListService)
+        [Authorize]
+        public async Task<List<GroceryListOutput>> UserHistoryGroceryLists(string userId, [Service] IUserGroceryListService _userGroceryListService)
         {
-            return await _userGroceryListService.GetUserGroceryLists(userId);
+            return await _userGroceryListService.GetUserHistoryGroceryLists(userId);
         }
 
         [Authorize]

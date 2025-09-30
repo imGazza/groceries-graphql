@@ -3,6 +3,7 @@ using API.Records;
 using API.Services.Shared;
 using DATA.Extensions;
 using DATA.Models;
+using GreenDonut.Data;
 using MongoDB.Driver;
 
 namespace API.Services.UserGroceryList
@@ -16,9 +17,9 @@ namespace API.Services.UserGroceryList
             _groceryListCollection = database.GetEntityCollection<GroceryList>();
         }
 
-        public async Task<List<GroceryListOutput>> GetUserGroceryLists(string userId)
+        public async Task<List<GroceryListOutput>> GetUserHistoryGroceryLists(string userId)
         {
-            return await _groceryListCollection.Find(gl => gl.UserId == userId).Project<GroceryList, GroceryListOutput>().ToListAsync();
+            return await _groceryListCollection.Find(gl => gl.UserId == userId && gl.Status != GroceryListStatus.Draft).SortByDescending(gl => gl.CompletedAt).Project<GroceryList, GroceryListOutput>().ToListAsync();
         }
 
         public async Task<GroceryListOutput> GetDraftUserGroceryList(string userId)
@@ -78,9 +79,18 @@ namespace API.Services.UserGroceryList
             );
         }
 
-        private decimal CalculateTotalPrice(List<GroceryItem> groceryItems)
+        public async Task<GroceryListOutput> CompleteGroceryList(string groceryListId, string userId)
         {
-            return groceryItems.Sum(item => item.Quantity * item.UnitPrice);
+            var updateDefinition = Builders<GroceryList>.Update
+                .Set(gl => gl.Status, GroceryListStatus.Completed)
+                .Set(gl => gl.CompletedAt, DateTime.Now);
+
+            await _groceryListCollection.UpdateOneAsync(
+                gl => gl.Id == groceryListId && gl.Status == GroceryListStatus.Draft,
+                updateDefinition
+            );
+
+            return await CreateUserGroceryList(userId);
         }
 
         private async Task<GroceryListOutput> UpdateGroceryItemQuantity(GroceryItem item, string groceryListId, decimal priceChange)

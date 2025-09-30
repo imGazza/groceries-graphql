@@ -12,15 +12,14 @@ post {
 
 body:graphql {
   {
-    userGroceryLists(userId: "6867d4b3d9365ec079a5ca4a") {
+    userGroceryLists(userId: "688b630df77dadbe36fc33b4") {
       totalPrice,
       completedAt,
       items {
         productItemId,
         productItemName,
         quantity,
-        unitPrice,
-        addedAt
+        unitPrice
       }
     }
   }

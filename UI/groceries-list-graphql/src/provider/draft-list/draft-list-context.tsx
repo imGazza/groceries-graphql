@@ -6,9 +6,11 @@ export const DraftListContext = createContext<{
 	addGroceryItem: (groceryItem: GroceryItem) => void,
 	changeItemQuantity: (groceryItem: GroceryItem, quantity: number) => void,
 	removeGroceryItem: (groceryItem: GroceryItem) => void,
+	confirmGroceryList: (emptyGroceryList: GroceryList) => void
 }>({
 	groceryList: null,
 	addGroceryItem: () => {},
 	changeItemQuantity: () => {},
 	removeGroceryItem: () => {},
+	confirmGroceryList: () => {}
 });

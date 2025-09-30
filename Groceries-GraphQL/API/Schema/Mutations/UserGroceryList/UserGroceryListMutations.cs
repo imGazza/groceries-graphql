@@ -31,5 +31,11 @@ namespace API.Schema.Mutations.UserGroceryList
         {
             return await _userGroceryListService.RemoveGroceryItem(item, groceryListId);
         }
+
+        [Authorize]
+        public async Task<GroceryListOutput> CompleteList(string groceryListId, string userId, [Service] IUserGroceryListService _userGroceryListService)
+        {
+            return await _userGroceryListService.CompleteGroceryList(groceryListId, userId);
+        }
     }
 }

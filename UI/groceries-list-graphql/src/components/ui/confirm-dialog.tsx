@@ -18,7 +18,7 @@ const ConfirmDialog = ({ message, onConfirm, ...props }: ConfirmDialogProps & Re
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm}>Confirm</AlertDialogAction>
+          <AlertDialogAction className="bg-custom text-secondary hover:bg-custom/80" onClick={onConfirm}>Confirm</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

@@ -1,13 +1,11 @@
-import { Badge } from "@/components/ui/badge"
 import Cart from "@/components/ui/cart"
 import IconButton from "@/components/ui/icon-button"
 import Logo from "@/components/ui/logo"
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, navigationMenuTriggerStyle } from "@/components/ui/navigation-menu"
 import TopbarSearchBar from "@/components/ui/topbar-searchbar"
 import useActiveSection from "@/hooks/use-active-section"
-import useDraftList from "@/hooks/use-draft-list"
 import SearchProvider from "@/provider/catalog/search-provider"
-import { ShoppingBasket, User } from "lucide-react"
+import { User } from "lucide-react"
 import { Link } from "react-router"
 
 
@@ -44,9 +42,11 @@ const TopBar = () => {
 				<div className="flex gap-3">
 					<SearchProvider>
 						<TopbarSearchBar />
-						<IconButton >
+						<Link to="/profile">
+							<IconButton>
 							<User />
 						</IconButton>
+						</Link>						
 						<Cart />
 					</SearchProvider>
 				</div>
