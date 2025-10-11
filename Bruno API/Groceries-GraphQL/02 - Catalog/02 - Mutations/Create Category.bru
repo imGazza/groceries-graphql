@@ -1,13 +1,17 @@
 meta {
   name: Create Category
   type: graphql
-  seq: 4
+  seq: 2
 }
 
 post {
   url: https://localhost:7298/graphql
   body: graphql
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{access-token}}
 }
 
 body:graphql {

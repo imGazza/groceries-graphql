@@ -1,5 +1,5 @@
 meta {
-  name: Get User Grocery List
+  name: Get User Draft List
   type: graphql
   seq: 2
 }
@@ -7,19 +7,24 @@ meta {
 post {
   url: https://localhost:7298/graphql
   body: graphql
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token:  {{access-token}}
 }
 
 body:graphql {
   {
-    userGroceryLists(userId: "688b630df77dadbe36fc33b4") {
+    userDraftGroceryList(userId: "688b630df77dadbe36fc33b4") {
+      id,
       totalPrice,
       completedAt,
       items {
         productItemId,
         productItemName,
         quantity,
-        unitPrice
+        unitPrice,
       }
     }
   }

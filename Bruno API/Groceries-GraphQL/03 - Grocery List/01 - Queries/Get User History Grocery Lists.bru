@@ -1,0 +1,37 @@
+meta {
+  name: Get User History Grocery Lists
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: https://localhost:7298/graphql
+  body: graphql
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{access-token}}
+}
+
+body:graphql {
+  query UserHistoryGroceryLists($userId: String){
+    userHistoryGroceryLists(userId: $userId) {
+      totalPrice,
+      completedAt,
+      status,
+      items {
+        productItemId,
+        productItemName,
+        quantity,
+        unitPrice
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "userId": "688b630df77dadbe36fc33b4"
+  }
+}

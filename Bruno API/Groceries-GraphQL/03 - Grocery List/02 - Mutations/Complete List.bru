@@ -1,0 +1,31 @@
+meta {
+  name: Complete List
+  type: graphql
+  seq: 5
+}
+
+post {
+  url: https://localhost:7298/graphql
+  body: graphql
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{access-token}}
+}
+
+body:graphql {
+  mutation CompleteList($groceryListId: String, $userId: String) {
+    completeList(groceryListId: $groceryListId, userId: $userId){
+      id,
+      userId
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "groceryListId": "688b6544f77dadbe36fc33b7",
+    "userId": "688b630df77dadbe36fc33b4"
+  }
+}
