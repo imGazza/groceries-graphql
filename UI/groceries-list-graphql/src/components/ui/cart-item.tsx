@@ -4,6 +4,7 @@ import IconButton from "./icon-button";
 import ConfirmDialog from "./confirm-dialog";
 import { Minus, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
+import { createImageUrl } from "@/lib/utils";
 
 interface CartItemProps {
 	item: GroceryItem;
@@ -22,8 +23,7 @@ const CartItem = ({ item, initialQuantity, increseQuantity, decreaseQuantity, re
 		setQuantity(initialQuantity);
 	}, [initialQuantity]);
 
-	const uint8Array = new Uint8Array(item.image);
-	const imageUrl = URL.createObjectURL(new Blob([uint8Array], { type: 'image/jpeg' }));
+	const imageUrl = createImageUrl(item.image);
 
 	const currencyPrice = (price: number) => new Intl.NumberFormat('en-US', {
 		style: 'currency',
@@ -53,20 +53,24 @@ const CartItem = ({ item, initialQuantity, increseQuantity, decreaseQuantity, re
 	}
 
 	return (
-		<div className="flex items-center justify-between px-3">
-			<div className="flex items-center">
-				<img src={imageUrl} alt={item.productItemName} className="max-h-15" />
-				<div className="p-3">
-					<CardTitle className="text-left font-normal text-md text-card-foreground/65">
-						{currencyPrice(item.unitPrice)}
-					</CardTitle>
-					<CardDescription className="text-left text-sm font-semibold text-card-foreground/85">
-						{item.productItemName}
-					</CardDescription>
+		<>
+			<div
+				key={item.productItemId}
+				className="flex items-center gap-4 p-4 rounded-lg border border-border bg-card hover:border-primary/50 transition-colors"
+			>
+				<div className="relative h-9 w-16 rounded-md overflow-hidden bg-muted flex-shrink-0">
+					<img src={createImageUrl(item.image)} alt={item.productItemName} />
 				</div>
-			</div>
 
-
+				<div className="flex-1 min-w-0">
+					<h4 className="font-semibold text-card-foreground truncate">{item.productItemName}</h4>
+					<div className="flex items-center gap-2 mt-1">
+						<span className="text-sm text-muted-foreground">
+							${item.unitPrice.toFixed(2)}
+						</span>
+					</div>
+				</div>
+				
 			<div className="flex justify-between px-3 items-center gap-3">
 				<IconButton
 					className="bg-custom text-secondary hover:bg-custom/80"
@@ -79,8 +83,10 @@ const CartItem = ({ item, initialQuantity, increseQuantity, decreaseQuantity, re
 				</IconButton>
 			</div>
 
+			</div>
+			
 			<ConfirmDialog onConfirm={removeItemFromList} open={openConfirmDialog} onOpenChange={(open: boolean) => setOpenConfirmDialog(open)} message="Are you sure you want to remove this item from your cart?" />
-		</div>
+		</>
 	)
 }
 export default CartItem;

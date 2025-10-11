@@ -1,19 +1,21 @@
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ShoppingCart, Calendar, DollarSign, Package, ChevronRight, CheckCircle2 } from "lucide-react"
+import { Calendar, DollarSign, Package, ChevronRight, CheckCircle2 } from "lucide-react"
 import { format } from "date-fns"
 import type { GroceryList } from "@/http/grocery-list"
 
 interface ProfileHistoryItemProps {
-  list: GroceryList
+  list: GroceryList,
+  onClick?: () => void;
 }
 
-const ProfileHistoryItem = ({ list }: ProfileHistoryItemProps) => {
+const ProfileHistoryItem = ({ list, onClick }: ProfileHistoryItemProps) => {
   const itemCount = list.items.length
 
   return (
     <Card
       className="group relative overflow-hidden border-border bg-card hover:border-custom/50 transition-all duration-300 cursor-pointer text-left"
+      onClick={onClick}
     >
       <div className="p-6">
         <div className="flex items-start justify-between mb-4">
@@ -64,7 +66,6 @@ const ProfileHistoryItem = ({ list }: ProfileHistoryItemProps) => {
                 key={item.productItemId}
                 className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-accent text-accent-foreground text-sm"
               >
-                <ShoppingCart className="h-3.5 w-3.5" />
                 <span className="font-medium">{item.productItemName}</span>
                 <span className="text-muted-foreground">×{item.quantity}</span>
               </div>
@@ -79,7 +80,7 @@ const ProfileHistoryItem = ({ list }: ProfileHistoryItemProps) => {
 
         <Button
           variant="ghost"
-          className="w-full justify-between group-hover:bg-custom/10 group-hover:text-custom transition-colors"
+          className="w-full justify-between group-hover:bg-custom/10 hover:bg-custom/10 hover:text-custom group-hover:text-custom transition-colors"
         >
           <span>View Details</span>
           <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />

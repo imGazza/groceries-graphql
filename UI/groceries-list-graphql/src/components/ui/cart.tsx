@@ -11,7 +11,7 @@ import { ScrollArea } from "./scroll-area";
 
 const mapToItemData = (groceryList: GroceryList | null, item: GroceryItem, quantity: number) => {
 	return {
-		groceryItem: { 
+		groceryItem: {
 			productItemId: item.productItemId,
 			productItemName: item.productItemName,
 			quantity: quantity,
@@ -80,24 +80,29 @@ const Cart = () => {
 					</SheetDescription>
 				</SheetHeader>
 
-				<div className="flex-1 my-4 overflow-hidden">
+				<div className="flex-1 overflow-hidden">
 					<ScrollArea className="h-full w-full">
-						{groceryList?.items.map(item => (
-							<CartItem
-								key={item.productItemId}
-								item={item}
-								initialQuantity={item.quantity}
-								increseQuantity={increaseItemQuantity}
-								decreaseQuantity={decreaseItemQuantity}
-								removeItem={removeItemFromList}
-							/>
-						))}
+						<div className="space-y-2 px-2">
+							{groceryList?.items.map(item => (
+								<CartItem
+									key={item.productItemId}
+									item={item}
+									initialQuantity={item.quantity}
+									increseQuantity={increaseItemQuantity}
+									decreaseQuantity={decreaseItemQuantity}
+									removeItem={removeItemFromList}
+								/>
+							))}
+						</div>
 					</ScrollArea>
 				</div>
 
 				<SheetFooter>
-					<div className="flex justify-center">
-						<span>{`Total: $${groceryList?.totalPrice}`}</span>
+					<div className="space-y-3 p-6 rounded-lg border-2 border-custom/20 bg-custom/5">
+						<div className="flex items-center justify-between">
+							<span className="text-lg font-semibold text-foreground">Total</span>
+							<span className="text-2xl font-bold text-primary">${groceryList?.totalPrice.toFixed(2)}</span>
+						</div>
 					</div>
 					<Button onClick={completeCart} className="bg-custom text-secondary hover:bg-custom/80" type="submit">Confirm Cart</Button>
 					<SheetClose asChild>

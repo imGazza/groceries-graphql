@@ -3,7 +3,6 @@ using API.Records;
 using API.Services.Shared;
 using DATA.Extensions;
 using DATA.Models;
-using GreenDonut.Data;
 using MongoDB.Driver;
 
 namespace API.Services.UserGroceryList

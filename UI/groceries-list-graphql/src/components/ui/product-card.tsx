@@ -5,6 +5,7 @@ import IconButton from "./icon-button";
 import { useEffect, useState } from "react";
 import ConfirmDialog from "./confirm-dialog";
 import { Skeleton } from "./skeleton";
+import { createImageUrl } from "@/lib/utils";
 
 interface ProductCardProps {
 	product: Product;
@@ -24,8 +25,7 @@ const ProductCard = ({ product, initialQuantity, addItem, increseQuantity, decre
 		setQuantity(initialQuantity);
 	}, [initialQuantity]);
 
-	const uint8Array = new Uint8Array(product.image.data);
-	const imageUrl = URL.createObjectURL(new Blob([uint8Array], { type: 'image/jpeg' }));
+	const imageUrl = createImageUrl(product.image.data);
 
 	const currencyPrice = (price: number) => new Intl.NumberFormat('en-US', {
 		style: 'currency',

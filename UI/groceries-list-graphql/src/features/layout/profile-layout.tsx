@@ -7,7 +7,7 @@ const ProfileLayout = () => {
 
 	return (
 		<div className="container-wrapper p-10">
-			<div className="container flex flex-col gap-5 min-h-[calc(100vh-0.25rem*100)]">
+			<div className="container flex flex-col gap-5 min-h-[calc(100vh-200px)]">
 				<div className="self-start">
 					<div className="text-4xl groceries-logo pacifico-font">
 						Hello, {user?.firstName}
@@ -18,7 +18,9 @@ const ProfileLayout = () => {
 					</p>
 				</div>
 
-				<ProfileHistory userId={user?.id || ""} />
+				<div className="flex-1">
+					<ProfileHistory userId={user?.id || ""} />
+				</div>				
 			</div>
 		</div>
 	)
