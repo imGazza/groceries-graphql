@@ -1,0 +1,104 @@
+[{
+  "_id": {
+    "$oid": "687f7396bf5943de10024a4f"
+  },
+  "CreatedAt": {
+    "$date": "2025-07-22T11:18:46.584Z"
+  },
+  "UpdatedAt": {
+    "$date": "2025-07-22T11:18:46.584Z"
+  },
+  "Name": "Vegetables",
+  "IconName": "Salad"
+},
+{
+  "_id": {
+    "$oid": "687f73aabf5943de10024a50"
+  },
+  "CreatedAt": {
+    "$date": "2025-07-22T11:19:06.782Z"
+  },
+  "UpdatedAt": {
+    "$date": "2025-07-22T11:19:06.782Z"
+  },
+  "Name": "Fruits",
+  "IconName": "Apple"
+},
+{
+  "_id": {
+    "$oid": "687f73bfbf5943de10024a51"
+  },
+  "CreatedAt": {
+    "$date": "2025-07-22T11:19:27.384Z"
+  },
+  "UpdatedAt": {
+    "$date": "2025-07-22T11:19:27.384Z"
+  },
+  "Name": "Meat",
+  "IconName": "Beef"
+},
+{
+  "_id": {
+    "$oid": "687f73ccbf5943de10024a52"
+  },
+  "CreatedAt": {
+    "$date": "2025-07-22T11:19:40.509Z"
+  },
+  "UpdatedAt": {
+    "$date": "2025-07-22T11:19:40.509Z"
+  },
+  "Name": "Fish",
+  "IconName": "Fish"
+},
+{
+  "_id": {
+    "$oid": "687f73d9bf5943de10024a53"
+  },
+  "CreatedAt": {
+    "$date": "2025-07-22T11:19:53.384Z"
+  },
+  "UpdatedAt": {
+    "$date": "2025-07-22T11:19:53.384Z"
+  },
+  "Name": "Breakfast",
+  "IconName": "EggFried"
+},
+{
+  "_id": {
+    "$oid": "687f73e3bf5943de10024a54"
+  },
+  "CreatedAt": {
+    "$date": "2025-07-22T11:20:03.634Z"
+  },
+  "UpdatedAt": {
+    "$date": "2025-07-22T11:20:03.634Z"
+  },
+  "Name": "Vegan",
+  "IconName": "Vegan"
+},
+{
+  "_id": {
+    "$oid": "687f73fbbf5943de10024a55"
+  },
+  "CreatedAt": {
+    "$date": "2025-07-22T11:20:27.990Z"
+  },
+  "UpdatedAt": {
+    "$date": "2025-07-22T11:20:27.990Z"
+  },
+  "Name": "Farm products",
+  "IconName": "Tractor"
+},
+{
+  "_id": {
+    "$oid": "687f7463bf5943de10024a56"
+  },
+  "CreatedAt": {
+    "$date": "2025-07-22T11:22:11.860Z"
+  },
+  "UpdatedAt": {
+    "$date": "2025-07-22T11:22:11.860Z"
+  },
+  "Name": "Snacks",
+  "IconName": "Donut"
+}]

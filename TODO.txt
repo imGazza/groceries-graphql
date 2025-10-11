@@ -1,0 +1,6 @@
+
+TODO:
+
+Add Skeletons to profile page components
+Error handling
+Responsiveness
